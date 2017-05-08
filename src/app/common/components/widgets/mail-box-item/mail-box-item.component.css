@@ -1,0 +1,4 @@
+td.inbox-small-cells, td.view-message {
+  border-top: none;
+  vertical-align: middle;
+}
