@@ -35,7 +35,7 @@ module.exports = {
       ref  : "origin/master",
       repo : "git@github.com:CodeHaven9ja/Schoolpop-front.git",
       path : "/home/dev/node/schoolpop-front",
-      "post-deploy" : "npm install -g @angular/cli && npm i && ng b --prod --aot"
+      // "post-deploy" : "npm install -g @angular/cli && npm i && ng b --prod --aot"
     },
     dev : {
       user : "node",
