@@ -1,16 +1,18 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-interface ISingleMail {
+export interface ISingleMail {
   objectId: string;
   from: string;
   excerpt: string;
   createdAt: string;
+  subject:string;
 }
 export class SingleMail implements ISingleMail {
-  objectId: string;
-  from: string;
-  excerpt: string;
-  createdAt: string;
+  public objectId: string;
+  public from: string;
+  public excerpt: string;
+  public createdAt: string;
+  public subject: string;
 }
 
 @Component({
