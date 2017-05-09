@@ -1,0 +1,48 @@
+<section>
+  <div class="sidebar-left">
+    <div class="logo dark-logo-bg visible-xs- visible-sm-">
+      <a routerLink="/dashboard">
+        <img src="../vendor/img/logo.png" width="32" alt="">
+        <span class="brand-name">Schoolpop</span>
+      </a>
+    </div>
+    <div class="sidebar-left-info">
+      <div class="search-field"></div>
+      <ul class="nav nav-pills nav-stacked side-navigation">
+        <li>
+          <h3 class="navigation-title">Navigation</h3>
+        </li>
+        <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a routerLink="/dashboard"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
+        <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a routerLink="/add-class"><i class="fa fa-home"></i> <span>Add Class</span></a></li>
+        <li class="menu-list">
+          <a #s><i class="fa fa-laptop"></i>  <span>Students</span></a>
+          <ul class="child-list">
+            <li>
+              <a>Enrollment</a>
+            </li>
+            <li>
+              <a>Attendance</a>
+            </li>
+            <li>
+              <a>Reports</a>
+            </li>
+            <li>
+              <a>Demographics</a>
+            </li>
+          </ul>
+        </li>
+        <li class="menu-list">
+          <a #s><i class="fa fa-book"></i>  <span>Parents</span></a>
+          <ul class="child-list">
+            <li>
+              <a>View Parents</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <h3 class="navigation-title">Others</h3>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>

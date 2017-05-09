@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { SingleMail } from '../single-mail/single-mail.component';
 import { MomentUtil } from '../../../../moment.util';
+import { User } from '../../../models/user';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'tr',
@@ -20,7 +22,11 @@ export class MailBoxItemComponent implements OnInit {
 
   momentUtil = new MomentUtil();
 
-  constructor() { }
+  currentUser:User;
+
+  constructor(private us: UserService) { 
+    this.currentUser = us.getCurrentUser();
+  }
 
   getCreatedAt(date) {
     return this.momentUtil.timeDateAgo(date);

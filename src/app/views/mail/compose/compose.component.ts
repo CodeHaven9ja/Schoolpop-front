@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { AsyncUserIdValidator } from './../../../common/validators/userid-validator';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -9,6 +10,8 @@ import 'rxjs/add/operator/filter';
 
 import { RouteService } from '../../../common/services/route.service';
 import { UserService } from '../../../common/services/user.service';
+import { MailService } from '../../../common/services/mail.service';
+import { Response } from '@angular/http';
 
 declare var jQuery: any;
 
@@ -26,7 +29,7 @@ export class ComposeComponent implements OnInit {
 
    v = new AsyncUserIdValidator(this.us);
 
-  constructor(private rs:RouteService, private us:UserService) {
+  constructor(private rs:RouteService, private us:UserService, private ms:MailService, private router:Router) {
     this.ckeditorContent = `<p>Write message here.</p>`;
   }
 
@@ -67,6 +70,27 @@ export class ComposeComponent implements OnInit {
 
   onSubmit(){
     console.log(this.ckeditorContent, JSON.stringify(this.itemsAsObjects), this.subject);
+    let message:any = {};
+
+    message.users = [];
+
+    for(let i =0; i < this.itemsAsObjects.length; i++) {
+      let u = this.itemsAsObjects[i].objectId;
+      message.users.push(u);
+    }
+
+    message.message = {
+      subject:this.subject,
+      text:this.ckeditorContent
+    }
+
+    this.ms.sendMail(message).subscribe(
+      (res) => {
+        this.router.navigate(['/mail']);
+      },
+      (err:Response) => console.log(err.json())
+    );
+
   }
 
 }

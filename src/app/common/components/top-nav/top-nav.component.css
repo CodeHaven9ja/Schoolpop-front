@@ -1,0 +1,28 @@
+.notification-menu .info-number {
+    padding: 0px 18px;
+    height: 60px;
+    line-height: 60px;
+    font-size: 16px;
+    background: none;
+    color: #8b8b8b;
+    border-color: #fff;
+    -moz-transition: all 0.2s ease-out 0s;
+    -webkit-transition: all 0.2s ease-out 0s;
+    transition: all 0.2s ease-out 0s;
+    float: left;
+}
+
+.info-number .badge {
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 13px;
+    padding: 2px 6px;
+    position: absolute;
+    right: 5px;
+    top: 10px;
+}
+
+.bg-primary, .info-number .bg-primary {
+    color: #fff;
+    background-color: #9c78cd;
+}

@@ -1,0 +1,85 @@
+<div class="header-section">
+  <!--logo and logo icon start-->
+  <div class="logo dark-logo-bg hidden-xs hidden-sm">
+    <a routerLink="/">
+      <img src="../vendor/img/logo.png" width="32" alt="">
+      <!--<i class="fa fa-maxcdn"></i>-->
+      <span class="brand-name">Schoolpop</span>
+    </a>
+  </div>
+  <div class="icon-logo dark-logo-bg hidden-xs hidden-sm">
+    <a routerLink="/">
+      <img src="../vendor/img/logo.png" width="32" alt="">
+
+      <!--<span class="brand-name">Schoolpop</span>-->
+    </a>
+  </div>
+  <!--logo and logo icon end-->
+
+  <!--toggle button start-->
+  <app-toggle-button (click)="toggle()"></app-toggle-button>
+  <!--toggle button end-->
+  <div class="notification-wrap">
+    <div class="left-notification">
+      <ul class="notification-menu">
+        <li class="d-none">
+          <a class="btn btn-default dropdown-toggle info-number" data-toggle="dropdown">
+            <i class="fa fa-envelope-o"></i>
+            <span class="badge bg-primary">{{m.length }}</span>
+          </a>
+          <div class="dropdown-menu dropdown-title">
+
+            <div class="title-row">
+              <h5 class="title purple">
+                {{mails.length | i18nPlural: mailMapping}}
+              </h5>
+              <a [routerLink]="['/mail', 'inbox']" class="btn-primary btn-view-all">View all</a>
+            </div>
+
+            <div class="notification-list mail-list">
+              <!-- TODO: Turn this into a component and loop it -->
+              <ng-container *ngFor="let mail of mails;  let i=index">
+                
+                <app-single-mail *ngIf="i<=6" [mail]="mail"></app-single-mail>
+              </ng-container>
+            </div>
+
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="right-notification">
+      <ul class="notification-menu">
+        <li>
+          <form class="search-content" action="index.html" method="post">
+            <input type="text" class="form-control" name="keyword" placeholder="Search...">
+          </form>
+        </li>
+        <li>
+          <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <app-gravatar [user]="user" [width]="32"></app-gravatar>
+            {{user.firstName}} {{user.lastName}}
+            <span class=" fa fa-angle-down"></span>
+          </a>
+          <ul class="dropdown-menu dropdown-usermenu purple pull-right">
+            <li><a>  Profile</a></li>
+            <li>
+              <a>
+                <span>Settings</span>
+              </a>
+            </li>
+            <li>
+              <a>
+                <span class="label bg-info pull-right">new</span>
+                Help
+              </a>
+            </li>
+            <li>
+              <a (click)="logout()">Logout</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
