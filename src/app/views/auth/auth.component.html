@@ -1,0 +1,46 @@
+<div class="login-logo">
+  <img src="../vendor/img/logo.png" alt="" />
+</div>
+<h2 class="form-heading">login</h2>
+<div class="container log-row">
+  <form class="form-signin" (ngSubmit)="onSubmit()" [formGroup]="authForm" novalidate>
+    <div class="login-wrap">
+      <input type="text" class="form-control" placeholder="Username" formControlName="username" autofocus>
+      <input type="password" class="form-control" placeholder="Password" formControlName="password">
+      <button [disabled]="!authForm.valid || isLoading" class="btn btn-lg btn-success btn-block" type="submit">LOGIN</button>
+      <label class="checkbox-custom check-success">
+        <input type="checkbox" value="remember-me" id="checkbox1"> <label for="checkbox1">Remember me</label>
+        <a class="pull-right" (click)="staticModal.show()"> Forgot Password?</a>
+      </label>
+
+      <div class="registration">
+        Don't have an account yet?
+        <a class="" href="registration.html">
+          Create an account
+        </a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Modal -->
+<div bsModal #staticModal="bs-modal" [config]="{backdrop: 'static'}" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="forgotPass" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" (click)="staticModal.hide()" aria-hidden="true" (click)="staticModal.hide()">&times;</button>
+        <h4 class="modal-title">Forgot Password ?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Enter your e-mail address below to reset your password.</p>
+        <input type="text" name="email" placeholder="Email" autocomplete="off" class="form-control placeholder-no-fix">
+
+      </div>
+      <div class="modal-footer">
+        <button (click)="staticModal.hide()" class="btn btn-default" type="button">Cancel</button>
+        <button class="btn btn-success" type="button">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal -->

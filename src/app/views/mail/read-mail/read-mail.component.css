@@ -1,0 +1,10 @@
+.avatar > span {
+  padding: 10px;
+  font-size: x-large;
+  letter-spacing: 3px;
+  text-transform: capitalize;
+}
+
+h4.title {
+  text-transform: capitalize;
+}
