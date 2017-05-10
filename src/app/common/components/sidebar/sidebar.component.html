@@ -13,11 +13,11 @@
           <h3 class="navigation-title">Navigation</h3>
         </li>
         <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a routerLink="/dashboard"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
-        <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a routerLink="/add-class"><i class="fa fa-home"></i> <span>Add Class</span></a></li>
+        <li *ngIf="currentUser.role == 'admin' || currentUser.role == 'teacher'" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a routerLink="/add-class"><i class="fa fa-home"></i> <span>Add Class</span></a></li>
         <li class="menu-list">
           <a #s><i class="fa fa-laptop"></i>  <span>Students</span></a>
           <ul class="child-list">
-            <li>
+            <li *ngIf="currentUser.role == 'admin' || currentUser.role == 'teacher'">
               <a>Enrollment</a>
             </li>
             <li>
@@ -26,12 +26,12 @@
             <li>
               <a>Reports</a>
             </li>
-            <li>
+            <li *ngIf="currentUser.role == 'admin' || currentUser.role == 'teacher'">
               <a>Demographics</a>
             </li>
           </ul>
         </li>
-        <li class="menu-list">
+        <li class="menu-list" *ngIf="currentUser.role == 'admin' || currentUser.role == 'teacher'">
           <a #s><i class="fa fa-book"></i>  <span>Parents</span></a>
           <ul class="child-list">
             <li>
@@ -41,6 +41,16 @@
         </li>
         <li>
           <h3 class="navigation-title">Others</h3>
+        </li>
+        <li class="menu-list">
+          <a href="javascript:;">
+            <i class="fa fa-envelope-o"></i> 
+            <span>Message <span *ngIf="uc > 0" class="label noti-arrow bg-danger pull-right">{{uc}} Unread</span> </span>
+          </a>
+          <ul class="child-list">
+            <li><a [routerLink]="['/mail', 'inbox']"> Inbox</a></li>
+            <li><a [routerLink]="['/mail', 'compose']"> Compose Mail</a></li>
+          </ul>
         </li>
       </ul>
     </div>

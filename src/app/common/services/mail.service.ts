@@ -53,7 +53,7 @@ export class MailService {
       headers: this.opts.headers,
       params: {
         "where" :{
-          "to" : this.us.getUserPointer(this.us.getCurrentUser()),
+          "to" : this.us.getUserPointer(this.us.currentUser),
           "isRead" : false          
         },
         include: ['message', 'from'],
@@ -70,7 +70,7 @@ export class MailService {
       headers: this.opts.headers,
       params: {
         "where" :{
-          "to" : this.us.getUserPointer(this.currentUser),
+          "to": this.us.getUserPointer(this.us.currentUser),
           "isRead" : false          
         },
         include: ['message', 'from'],
@@ -103,7 +103,7 @@ export class MailService {
       headers: this.opts.headers,
       params: {
         "where" :{
-          "to" : this.us.getUserPointer(this.currentUser)         
+          "to" : this.us.getUserPointer(this.us.currentUser)         
         },
         include: ['message', 'from'],
         limit: limit,
@@ -119,7 +119,7 @@ export class MailService {
       headers: this.opts.headers,
       params: {
         "where" :{
-          "from" : this.us.getUserPointer(this.currentUser)         
+          "from": this.us.getUserPointer(this.us.currentUser)         
         },
         include: ['message', 'to', 'from'],
         limit: limit,

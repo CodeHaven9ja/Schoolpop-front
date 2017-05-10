@@ -16,20 +16,17 @@ export class UserService {
 
   loggedIn = this.isLoggedIn.asObservable();
 
+  currentUser:User = this.getCurrentUser();
+
   setLoginStatus(status:boolean = false) {
     this.isLoggedIn.next(status);
   }
 
   constructor(private http:Http, private router:Router) {
-    if (this.getCurrentUser() != null) {
-      this.setLoginStatus(true);
-    } else {
-      this.setLoginStatus(false);
-    }
   }
 
   getUser(id:string):Observable<User> {
-    let options = this.getOptions(this.getCurrentUser().sessionToken);
+    let options = this.getOptions();
 
     return this.http.get(this.baseUrl+"/classes/_User/"+id, options)
     .map((res:Response) => {
@@ -38,14 +35,13 @@ export class UserService {
   }
 
   getCurrentUser():User {
-    if (localStorage.getItem("currentUser")) {
-      return <User>JSON.parse(localStorage.getItem("currentUser"));
-    }
-    return null;
+    return <User>JSON.parse(localStorage.getItem("currentUser"));
   }
 
   setCurrentUser(user:User) {
+    localStorage.clear();
     localStorage.setItem("currentUser", JSON.stringify(user));
+    this.currentUser = this.getCurrentUser();
     this.setLoginStatus(true);
   }
 
@@ -59,24 +55,23 @@ export class UserService {
 
     return this.http.get(
       this.baseUrl+"/login?username="+cred.username+"&password="+cred.password, 
-      this.getOptions()).map((res:Response) => res.json());
+      this.getOptions()
+      ).map((res:Response) => res.json());
   }
 
   logout() {
     this.setLoginStatus(false);
-    localStorage.clear();
+    this.currentUser = null;
+    localStorage.removeItem("currentUser");
     this.router.navigate(['/']);
   }
 
-  getOptions(token?: string): RequestOptions {
+  getOptions(): RequestOptions {
+    let user:User = <User>JSON.parse(localStorage.getItem("currentUser"));
+    let token = user ? user.sessionToken : '';
     let headers = new Headers({ 'Content-Type': 'application/json' });
     headers.append('X-Parse-Application-Id', '9o87s1WOIyPgoTEGv0PSp9GXT1En9cwC');
-    if (this.getCurrentUser()) {
-      let user:User = this.getCurrentUser();
-      headers.append('X-Parse-Session-Token', user.sessionToken);
-    } else if (token) {
-      headers.append('X-Parse-Session-Token', token);
-    }
+    headers.append('X-Parse-Session-Token', token);
 
     let options = new RequestOptions({ headers: headers });
 
