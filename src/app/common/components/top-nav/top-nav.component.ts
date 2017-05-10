@@ -1,7 +1,7 @@
 import { MomentUtil } from './../../../moment.util';
 import { forEach } from '@angular/router/src/utils/collection';
 import { Component, OnInit } from '@angular/core';
-import { Http, Headers, Response, RequestOptions } from '@angular/http';
+import { Response } from '@angular/http';
 
 import { adjustMainContentHeight } from '../../../app.js.helpers';
 import { visibleSubMenuClose } from '../../../app.js.helpers';
@@ -23,7 +23,8 @@ export class TopNavComponent implements OnInit {
 
   mails: SingleMail[] = [];
   user: User;
-  m: any[] = [];
+
+  uc:number = 0;
 
   mailMapping:
       {[k: string]: string} = {'=0': 'No unread mails.', '=1': 'One unread mail.', 'other': '# unread mails.'};
@@ -32,23 +33,12 @@ export class TopNavComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.us.getCurrentUser();
-    this.ms.getUnreadMails().subscribe(
-      (mails) => {
-        this.m = [];
-        this.mails = [];
-        this.m = mails;
-        let momentUtil = new MomentUtil();
-        for (let i = 0; i < this.m.length; i++) {
-          let mm = this.m[i];
-          let m = new SingleMail();
-          m.from = mm.from.firstName;
-          m.excerpt = mm.subject;
-          m.objectId = mm.objectId;
-          m.createdAt = momentUtil.timeDateAgo(mm.createdAt);
-          this.mails.push(m);
-        }
-      },
-      (err: Response) => console.log(err.json())
+    this.ms.uc.subscribe(
+      (count:number) => this.uc = count
+    )
+
+    this.ms.um.subscribe(
+      (mails:SingleMail[]) => this.mails = mails
     )
   }
 

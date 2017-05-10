@@ -1,5 +1,12 @@
-import { Subscription } from 'rxjs/Rx';
-import { Component, OnInit, OnDestroy, NgZone, Renderer, ElementRef, ViewChild } from '@angular/core';
+import { 
+  Component, 
+  OnInit, 
+  OnDestroy, 
+  NgZone, 
+  Renderer, 
+  ElementRef, 
+  ViewChild, 
+  ViewContainerRef } from '@angular/core';
 import {
   Router,
   Event as RouterEvent,
@@ -8,9 +15,19 @@ import {
   NavigationCancel,
   NavigationError
 } from '@angular/router';
+import { Response } from '@angular/http';
+
+import { Subscription } from 'rxjs/Rx';
+
+import { ToastsManager, Toast } from 'ng2-toastr';
 
 import { adjustMainContentHeight } from './app.js.helpers';
 import { RouteService } from './common/services/route.service';
+import { MailService } from './common/services/mail.service';
+import { MomentUtil } from './moment.util';
+import { SingleMail } from './common/components/widgets/single-mail/single-mail.component';
+import { User } from './common/models/user';
+import { UserService } from './common/services/user.service';
 
 declare var jQuery: any;
 
@@ -27,13 +44,25 @@ export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('spinnerElement') spinnerElement: ElementRef;
 
   sub:Subscription;
+  sub2:Subscription;
+
+  unreadCount:number = 0;
+
+  mails: SingleMail[] = [];
+  user: User;
+  m: any[] = [];
 
   constructor(
     private rs: RouteService,
     private router: Router,
     private ngZone: NgZone,
-    private renderer: Renderer) {
+    private renderer: Renderer,
+    private us:UserService,
+    private toastr: ToastsManager,
+    vRef: ViewContainerRef,
+    private ms:MailService) {
 
+    this.toastr.setRootViewContainerRef(vRef);
     this.sub = router.events.subscribe((event: RouterEvent) => {
       this._navigationInterceptor(event);
     });
@@ -47,6 +76,36 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     )
     adjustMainContentHeight();
+
+    this.user = this.us.getCurrentUser();
+    if (this.user) {
+      this.sub2 = this.ms.getUnreadMails().subscribe(
+        (mails) => {
+          this.m = mails;
+          let momentUtil = new MomentUtil();
+          for (let i = 0; i < this.m.length; i++) {
+            let mm = this.m[i];
+            let m = new SingleMail();
+            m.from = mm.from.firstName;
+            m.excerpt = mm.subject;
+            m.objectId = mm.objectId;
+            m.createdAt = momentUtil.timeDateAgo(mm.createdAt);
+            this.mails.push(m);
+          }
+          if (this.unreadCount < this.m.length) {
+            this.toastr.success("You have new messages", null, {dismiss: 'click'});
+          }
+          this.unreadCount = this.m.length;
+          this.ms.setUnreadCount(this.m.length);
+          this.ms.setUnreadMails(this.mails);
+        },
+        (err: Response) => {
+          console.log(err.json());
+          this.ms.setUnreadCountError(err);
+          this.ms.setUnreadMailsError(err);
+        }
+      )
+    }
   }
 
   private _navigationInterceptor(event: RouterEvent): void {
@@ -83,5 +142,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    if (this.sub2) {
+      this.sub2.unsubscribe();
+    }
   }
 }

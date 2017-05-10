@@ -5,11 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
+import { ToastModule, ToastOptions } from 'ng2-toastr';
+
 import { AppComponent } from './app.component';
 import { ROUTES } from './app.routes';
 import { ViewsModule } from './views/views.module';
 import { RouteService } from './common/services/route.service';
 import { MdProgressSpinnerModule } from '@angular/material';
+import { CustomOption } from './toastr.options';
 
 @NgModule({
   declarations: [
@@ -20,11 +23,12 @@ import { MdProgressSpinnerModule } from '@angular/material';
     BrowserAnimationsModule,
     FormsModule,
     HttpModule,
+    ToastModule.forRoot(),
     RouterModule.forRoot(ROUTES),
     ViewsModule,
     MdProgressSpinnerModule
   ],
-  providers: [RouteService],
+  providers: [RouteService, { provide: ToastOptions, useClass: CustomOption }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

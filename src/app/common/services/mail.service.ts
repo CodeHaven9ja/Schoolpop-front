@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs/Subject';
 import { ObservableUtil } from '../../ObservableUtil';
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response, RequestOptions, URLSearchParams } from '@angular/http';
@@ -7,9 +8,34 @@ import 'rxjs/add/operator/map';
 
 import { User } from '../models/user';
 import { UserService } from './user.service';
+import { SingleMail } from '../components/widgets/single-mail/single-mail.component';
 
 @Injectable()
 export class MailService {
+
+  // Unread Count
+  private unreadCount = new Subject<number>();
+  uc = this.unreadCount.asObservable();
+
+  setUnreadCount(c:number){
+    this.unreadCount.next(c);
+  }
+
+  setUnreadCountError(error:Response) {
+    this.unreadCount.error(error);
+  }
+
+  // Unread mails
+  private unReadMails = new Subject<SingleMail[]>();
+  um = this.unReadMails.asObservable();
+
+  setUnreadMails(m:SingleMail[]){
+    this.unReadMails.next(m);
+  }
+
+  setUnreadMailsError(error:Response) {
+    this.unReadMails.error(error);
+  }
 
   currentUser:User;
   opts: RequestOptions;
@@ -22,7 +48,7 @@ export class MailService {
   }
 
   getUnreadMails() {
-    let ticker = new ObservableUtil().getTicker(0, 1000*30);
+    let ticker = new ObservableUtil().getTicker(0, 1000*10);
 
     let options = new RequestOptions({
       headers: this.opts.headers,

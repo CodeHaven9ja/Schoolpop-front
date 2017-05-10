@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Response } from '@angular/http';
 
 import { Subscription } from 'rxjs/Rx';
 
@@ -19,8 +20,8 @@ export class MailComponent implements OnInit, OnDestroy {
   constructor(private ms:MailService) { }
 
   ngOnInit() {
-    this.sub = this.ms.getUnreadMails().subscribe(
-      (m) => this.unReadCount = m.length
+    this.sub = this.ms.uc.subscribe(
+      (m) => this.unReadCount = m
     );
   }
 
