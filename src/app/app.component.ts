@@ -1,12 +1,13 @@
-import { 
-  Component, 
-  OnInit, 
-  OnDestroy, 
-  NgZone, 
-  Renderer, 
-  ElementRef, 
-  ViewChild, 
-  ViewContainerRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  NgZone,
+  Renderer,
+  ElementRef,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 import {
   Router,
   Event as RouterEvent,
@@ -43,10 +44,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   @ViewChild('spinnerElement') spinnerElement: ElementRef;
 
-  sub:Subscription;
-  sub2:Subscription;
+  sub: Subscription;
+  sub2: Subscription;
 
-  unreadCount:number = 0;
+  unreadCount: number = 0;
 
   mails: SingleMail[] = [];
   user: User;
@@ -57,10 +58,10 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private ngZone: NgZone,
     private renderer: Renderer,
-    private us:UserService,
+    private us: UserService,
     private toastr: ToastsManager,
     vRef: ViewContainerRef,
-    private ms:MailService) {
+    private ms: MailService) {
 
     this.toastr.setRootViewContainerRef(vRef);
     this.sub = router.events.subscribe((event: RouterEvent) => {
@@ -78,34 +79,50 @@ export class AppComponent implements OnInit, OnDestroy {
     adjustMainContentHeight();
 
     this.user = this.us.getCurrentUser();
-    if (this.user) {
-      this.sub2 = this.ms.getUnreadMails().subscribe(
-        (mails) => {
-          this.m = mails;
-          let momentUtil = new MomentUtil();
-          for (let i = 0; i < this.m.length; i++) {
-            let mm = this.m[i];
-            let m = new SingleMail();
-            m.from = mm.from.firstName;
-            m.excerpt = mm.subject;
-            m.objectId = mm.objectId;
-            m.createdAt = momentUtil.timeDateAgo(mm.createdAt);
-            this.mails.push(m);
-          }
-          if (this.unreadCount < this.m.length) {
-            this.toastr.success("You have new messages", null, {dismiss: 'click'});
-          }
-          this.unreadCount = this.m.length;
-          this.ms.setUnreadCount(this.m.length);
-          this.ms.setUnreadMails(this.mails);
-        },
-        (err: Response) => {
-          console.log(err.json());
-          this.ms.setUnreadCountError(err);
-          this.ms.setUnreadMailsError(err);
-        }
-      )
+
+    if (this.user != null) {
+      this.us.setLoginStatus(true);
+    } else {
+      this.us.setLoginStatus(false);
     }
+
+    this.us.isLoggedIn.subscribe(
+      (status) => {
+        console.log(status);
+        if (!status) {
+          this.user = null;
+          this.sub2.unsubscribe();
+        } else {
+          this.user = this.us.getCurrentUser();
+          this.sub2 = this.ms.getUnreadMails().subscribe(
+            (mails) => {
+              this.m = mails;
+              let momentUtil = new MomentUtil();
+              for (let i = 0; i < this.m.length; i++) {
+                let mm = this.m[i];
+                let m = new SingleMail();
+                m.from = mm.from.firstName;
+                m.excerpt = mm.subject;
+                m.objectId = mm.objectId;
+                m.createdAt = momentUtil.timeDateAgo(mm.createdAt);
+                this.mails.push(m);
+              }
+              if (this.unreadCount < this.m.length) {
+                this.toastr.success("You have new messages", null, { dismiss: 'click' });
+              }
+              this.unreadCount = this.m.length;
+              this.ms.setUnreadCount(this.m.length);
+              this.ms.setUnreadMails(this.mails);
+            },
+            (err: Response) => {
+              console.log(err.json());
+              this.ms.setUnreadCountError(err);
+              this.ms.setUnreadMailsError(err);
+            }
+          )
+        }
+      }
+    );
   }
 
   private _navigationInterceptor(event: RouterEvent): void {

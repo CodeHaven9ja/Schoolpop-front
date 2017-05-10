@@ -6,12 +6,27 @@ import 'rxjs/add/operator/map';
 
 import { User } from '../models/user';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class UserService {
   baseUrl: string = "http://api.schoolpop.ng/1";
 
-  constructor(private http:Http, private router:Router) { }
+  isLoggedIn = new Subject<boolean>();
+
+  loggedIn = this.isLoggedIn.asObservable();
+
+  setLoginStatus(status:boolean = false) {
+    this.isLoggedIn.next(status);
+  }
+
+  constructor(private http:Http, private router:Router) {
+    if (this.getCurrentUser() != null) {
+      this.setLoginStatus(true);
+    } else {
+      this.setLoginStatus(false);
+    }
+  }
 
   getUser(id:string):Observable<User> {
     let options = this.getOptions(this.getCurrentUser().sessionToken);
@@ -23,11 +38,15 @@ export class UserService {
   }
 
   getCurrentUser():User {
-    return <User>JSON.parse(localStorage.getItem("currentUser"));
+    if (localStorage.getItem("currentUser")) {
+      return <User>JSON.parse(localStorage.getItem("currentUser"));
+    }
+    return null;
   }
 
   setCurrentUser(user:User) {
     localStorage.setItem("currentUser", JSON.stringify(user));
+    this.setLoginStatus(true);
   }
 
   isAdmin():boolean {
@@ -44,6 +63,7 @@ export class UserService {
   }
 
   logout() {
+    this.setLoginStatus(false);
     localStorage.clear();
     this.router.navigate(['/']);
   }

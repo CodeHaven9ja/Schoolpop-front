@@ -43,13 +43,29 @@ export class MailService {
   baseUrl: string = "http://api.schoolpop.ng/1";
 
   constructor(private us:UserService, private http:Http) { 
-    this.currentUser = us.getCurrentUser();
-    this.opts = us.getOptions(this.currentUser.sessionToken);
+    this.opts = us.getOptions();
   }
 
   getUnreadMails() {
     let ticker = new ObservableUtil().getTicker(0, 1000*10);
 
+    let options = new RequestOptions({
+      headers: this.opts.headers,
+      params: {
+        "where" :{
+          "to" : this.us.getUserPointer(this.us.getCurrentUser()),
+          "isRead" : false          
+        },
+        include: ['message', 'from'],
+        order: "-createdAt"
+      }
+    });
+
+    return ticker.flatMap(() => this.http.get(this.baseUrl+"/classes/Mail", options))
+    .map((res:Response) => res.json().results);
+  }
+
+  unTicked() {
     let options = new RequestOptions({
       headers: this.opts.headers,
       params: {
@@ -62,8 +78,7 @@ export class MailService {
       }
     });
 
-    return ticker.flatMap(() => this.http.get(this.baseUrl+"/classes/Mail", options))
-    .map((res:Response) => res.json().results);
+    return this.http.get(this.baseUrl+"/classes/Mail", options).map((res:Response) => res.json().results);
   }
 
   getMail(id:string) {
