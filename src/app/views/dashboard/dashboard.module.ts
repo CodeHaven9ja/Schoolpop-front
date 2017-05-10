@@ -7,14 +7,17 @@ import { RouterModule } from '@angular/router';
 import { RouteService } from '../../common/services/route.service';
 import { UserService } from '../../common/services/user.service';
 import { MailResolver } from '../../common/resolvers/mail-resolver';
+import { WidgetsModule } from '../../common/components/widgets/widgets.module';
+import { NewsService } from '../../common/services/news.service';
 
 @NgModule({
   imports: [
     CommonModule,
     ComponentsModule,
-    RouterModule
+    RouterModule,
+    WidgetsModule
   ],
   declarations: [DashboardComponent],
-  providers:[AuthenticatedGuard, RouteService, UserService, MailResolver]
+  providers:[AuthenticatedGuard, RouteService, UserService, MailResolver, NewsService]
 })
 export class DashboardModule { }

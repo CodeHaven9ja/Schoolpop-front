@@ -48,8 +48,9 @@ export class AuthComponent implements OnInit {
     this.us.login(cred).subscribe(
       (user: User) => {
         this.isLoading = false;
+        this.us.currentUser = null;
         this.us.setCurrentUser(user);
-        this.router.navigate(['/dashboard']);
+        location.href = "/dashboard";
       },
       (err: Response) => {
         let e = err.json();

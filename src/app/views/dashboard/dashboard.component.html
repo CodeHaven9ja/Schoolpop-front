@@ -1,3 +1,25 @@
-<p>
-  dashboard works!
-</p>
+<div class="page-head"></div>
+<div class="wrapper">
+  <div class="row">
+    <div class="col-md-8"></div>
+    <div class="col-md-4">
+      <div class="panel">
+        <div class="slick-carousal">
+          <div class="overlay-c-bg"></div>
+          <news-widget id="news-feed">
+            <div class="item" *ngFor="let item of news">
+              <h3 class="text-success">News</h3>
+              <span class="date">{{item.date}}</span>
+              <h1>{{item.text | slice:0:140}}</h1>
+              <div class="text-center">
+                <a [routerLink]="['/news', item.objectId]" class="view-all">
+                    Read
+                  </a>
+              </div>
+            </div>
+          </news-widget>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

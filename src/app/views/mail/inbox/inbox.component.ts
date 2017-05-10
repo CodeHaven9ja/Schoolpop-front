@@ -26,7 +26,7 @@ export class InboxComponent implements OnInit, OnDestroy {
     this.rs.setBc("sticky-header");
     this.mails = this.route.snapshot.data['mails'];
 
-    // console.log(this.route.snapshot.data['mails']);
+    console.log(this.route.snapshot.data['mails']);
   }
 
   navigateToMail(objectId) {
