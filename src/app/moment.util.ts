@@ -14,4 +14,8 @@ export class MomentUtil {
     return d.format(format);
   }
 
+  getMoment() {
+    return moment;
+  }
+
 }
