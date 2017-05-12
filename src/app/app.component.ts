@@ -119,7 +119,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.mails.push(m);
         }
         if (this.unreadCount < this.m.length) {
-          this.toastr.success("You have new messages", null, { dismiss: 'click' });
+          this.toastr.success("You have new messages");
         }
         this.unreadCount = this.m.length;
         this.ms.setUnreadCount(this.m.length);

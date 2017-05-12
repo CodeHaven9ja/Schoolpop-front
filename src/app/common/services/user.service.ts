@@ -10,7 +10,7 @@ import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class UserService {
-  baseUrl: string = "http://api.schoolpop.ng/1";
+  baseUrl: string = "https://api.schoolpop.ng/1";
 
   isLoggedIn = new Subject<boolean>();
 

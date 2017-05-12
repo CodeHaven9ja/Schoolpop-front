@@ -40,7 +40,7 @@ export class MailService {
   currentUser:User;
   opts: RequestOptions;
 
-  baseUrl: string = "http://api.schoolpop.ng/1";
+  baseUrl: string = "https://api.schoolpop.ng/1";
 
   constructor(private us:UserService, private http:Http) { 
     this.opts = us.getOptions();
