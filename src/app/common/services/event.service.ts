@@ -26,7 +26,6 @@ export class EventService {
     // Seven days ago
     let startDate = this.moment().subtract('90', 'd').toISOString();
     let endDate = this.moment().add('7', 'd').toISOString();
-    console.log(startDate);
 
     let options = new RequestOptions({
       headers: this.opts.headers,
@@ -70,76 +69,8 @@ export class EventService {
       options.events = events;
       options.theme = false;
 
-      console.log(options);
-
       return options;
     });
-
-    // return {
-    //   height: 'parent',
-    //   fixedWeekCount: false,
-    //   defaultView:'listWeek',
-    //   defaultDate: startDate,
-    //   editable: false,
-    //   eventLimit: true, // allow "more" link when too many events
-    //   events: [
-    //     {
-    //       title: 'All Day Event',
-    //       url: '/events',
-    //       start: startDate
-    //     },
-    //     {
-    //       title: 'Long Event',
-    //       start: '2016-09-07',
-    //       end: '2016-09-10'
-    //     },
-    //     {
-    //       id: 999,
-    //       title: 'Repeating Event',
-    //       start: '2016-09-09T16:00:00'
-    //     },
-    //     {
-    //       id: 999,
-    //       title: 'Repeating Event',
-    //       start: '2016-09-16T16:00:00'
-    //     },
-    //     {
-    //       title: 'Conference',
-    //       start: '2016-09-11',
-    //       end: '2016-09-13'
-    //     },
-    //     {
-    //       title: 'Meeting',
-    //       start: '2016-09-12T10:30:00',
-    //       end: '2016-09-12T12:30:00'
-    //     },
-    //     {
-    //       title: 'Lunch',
-    //       start: '2016-09-12T12:00:00'
-    //     },
-    //     {
-    //       title: 'Meeting',
-    //       start: '2016-09-12T14:30:00'
-    //     },
-    //     {
-    //       title: 'Happy Hour',
-    //       start: '2016-09-12T17:30:00'
-    //     },
-    //     {
-    //       title: 'Dinner',
-    //       start: '2016-09-12T20:00:00'
-    //     },
-    //     {
-    //       title: 'Birthday Party',
-    //       start: '2016-09-13T07:00:00'
-    //     },
-    //     {
-    //       title: 'Click for Google',
-    //       url: 'https://google.com/',
-    //       start: '2016-09-28'
-    //     }
-    //   ]
-    // };
   }
 
   getDatePointer(date:string = this.moment().toISOString()) {

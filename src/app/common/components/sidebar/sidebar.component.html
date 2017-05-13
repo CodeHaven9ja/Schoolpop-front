@@ -12,8 +12,12 @@
         <li>
           <h3 class="navigation-title">Navigation</h3>
         </li>
-        <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a routerLink="/dashboard"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
-        <li *ngIf="currentUser.role == 'admin' || currentUser.role == 'teacher'" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a routerLink="/add-class"><i class="fa fa-home"></i> <span>Add Class</span></a></li>
+        <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+          <a routerLink="/dashboard"><i class="fa fa-home"></i> <span>Dashboard</span></a>
+        </li>
+        <li *ngIf="currentUser.role == 'admin'" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+          <a routerLink="/class"><i class="fa fa-home"></i> <span>Classes</span></a>
+        </li>
         <li class="menu-list">
           <a #s><i class="fa fa-laptop"></i>  <span>Students</span></a>
           <ul class="child-list">
@@ -32,7 +36,7 @@
           </ul>
         </li>
         <li class="menu-list" *ngIf="currentUser.role == 'admin' || currentUser.role == 'teacher'">
-          <a #s><i class="fa fa-book"></i>  <span>Parents</span></a>
+          <a #p><i class="fa fa-book"></i>  <span>Parents</span></a>
           <ul class="child-list">
             <li>
               <a>View Parents</a>

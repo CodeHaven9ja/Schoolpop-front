@@ -1,0 +1,28 @@
+<div class="panel">
+  <header class="panel-heading">
+    List Of Classes
+  </header>
+  <div class="panel-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>
+            Class
+          </th>
+          <th>
+            Number of students
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of classes">
+          <td>{{c.commonName}}</td>
+          <td>{{c.students?.length}}</td>
+          <td>
+            <a [routerLink]="['/class',c.objectId]">View</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

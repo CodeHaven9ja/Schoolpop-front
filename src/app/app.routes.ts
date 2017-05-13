@@ -14,6 +14,9 @@ import { InboxResolve } from './common/resolvers/inbox-resolver';
 import { MailItemResolve } from './common/resolvers/mail-item-resolver';
 import { OutboxResolve } from './common/resolvers/outbox-resolver';
 import { ComposeComponent } from './views/mail/compose/compose.component';
+import { ClassRoomComponent } from './views/class-room/class-room.component';
+import { ClassRoomIndexComponent } from './views/class-room/index/index.component';
+import { ClassRoomViewComponent } from './views/class-room/view/view.component';
 export const ROUTES:Routes = [
   {
     "path" : '',
@@ -41,9 +44,24 @@ export const ROUTES:Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent
-        // resolve: {
-        //   m: MailResolver
-        // }
+      },
+      {
+        path : 'class',
+        redirectTo: 'class/index'
+      },
+      {
+        path : 'class',
+        component: ClassRoomComponent,
+        children: [
+          {
+            path : 'index',
+            component : ClassRoomIndexComponent
+          },
+          {
+            path : ':id',
+            component: ClassRoomViewComponent
+          }
+        ]
       },
       {
         path: 'mail',

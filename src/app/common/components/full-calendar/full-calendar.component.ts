@@ -26,7 +26,6 @@ export class FullCalendarComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit() {
-    console.log("Got here!");
     this.initFlag = true;
     if (this.options) {
       this.build();
@@ -34,7 +33,6 @@ export class FullCalendarComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
     if (changes.options.currentValue) {
       jQuery(this.fullCalender.nativeElement).fullCalendar(changes.options.currentValue);
     }

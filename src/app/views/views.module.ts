@@ -1,3 +1,4 @@
+import { ClassRoomModule } from './class-room/class-room.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -17,7 +18,8 @@ import { WidgetsModule } from '../common/components/widgets/widgets.module';
     DashboardModule,
     LandingModule,
     MailModule,
-    WidgetsModule
+    WidgetsModule,
+    ClassRoomModule
   ],
   declarations: []
 })

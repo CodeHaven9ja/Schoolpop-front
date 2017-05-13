@@ -1,0 +1,26 @@
+<div class="page-head"></div>
+<div class="wrapper">
+  <div class="row">
+    <div class="col-md-7">
+      <router-outlet></router-outlet>
+    </div>
+    <div class="col-md-5">
+      <div class="panel">
+        <header class="panel-heading">
+          Add New Class
+        </header>
+        <div class="panel-body">
+          <form [formGroup]="newClassForm" (ngSubmit)="onSubmit()">
+            <div [ngClass]="{'has-error': !commonName.valid && commonName.touched, 'has-success':commonName.valid}" class="form-group">
+              <input type="text" 
+                class="form-control" 
+                placeholder="Class Name" 
+                formControlName="commonName">
+            </div>
+            <button [disabled]="!newClassForm.valid || isLoading" class="btn btn-success" type="submit">Create Class</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
