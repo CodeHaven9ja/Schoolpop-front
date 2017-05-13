@@ -19,7 +19,7 @@
       "test": "test.ts",
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
-      "prefix": "app",
+      "prefix": "sp",
       "styles": [
         "../node_modules/bootstrap/dist/css/bootstrap.css",
         "../node_modules/sweetalert2/dist/sweetalert2.min.css",
@@ -65,7 +65,7 @@
     }
   },
   "defaults": {
-    "styleExt": "css",
+    "styleExt": "scss",
     "component": {}
   }
 }

@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { RouteService } from '../../common/services/route.service';
 import { NewsService } from '../../common/services/news.service';
@@ -16,28 +17,15 @@ declare var $: any, jQuery: any;
 export class DashboardComponent implements OnInit {
   news: any[] = [];
   calendar: any;
-
-  @ViewChild('fullCalender') private fullCalender: ElementRef
+  events: Observable<any> = this.es.getEvents();
 
   constructor(private rs: RouteService, private ns: NewsService, private es:EventService) { }
 
   ngOnInit() {
     this.rs.setBc("sticky-header");
     this.news = this.ns.getNews();
-    this.es.getEvents().subscribe(
-      (events) => {
-        this.build(events);
-        adjustMainContentHeight();
-      }
-    );
+    adjustMainContentHeight();
     // console.log(JSON.stringify(this.events));
-  }
-
-  build(events:any) {
-    if (typeof jQuery.fullCalendar === 'undefined') {
-      throw new Error('Configuration issue: Embedding jquery.fullCalendar.js lib is mandatory');
-    }
-    this.calendar = jQuery(this.fullCalender.nativeElement).fullCalendar(events);
   }
 
 }

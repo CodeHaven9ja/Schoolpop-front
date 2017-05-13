@@ -1,26 +1,28 @@
-import { NgModule, Directive, OnInit, Input, OnDestroy, OnChanges, SimpleChanges, ElementRef } from '@angular/core';
+import { NgModule, Component, OnInit, Input, OnDestroy, OnChanges, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
 
 import '../../../../../node_modules/fullcalendar/dist/fullcalendar.min.js';
 
 declare var jQuery: any;
 
-@Directive({
-  selector: '[fullCalendar]',
+@Component({
+  selector: 'sp-full-calendar',
+  templateUrl: './full-calendar.component.html',
+  styleUrls: ['./full-calendar.component.scss'],
   host: {
     '(window:resize)': 'onResize()'
   }
 })
-export class FullCalendarDirective implements OnInit, OnDestroy {
+export class FullCalendarComponent implements OnInit, OnDestroy, OnChanges {
 
   // Properties
   @Input() private options: any;
 
+  @ViewChild('fullCalender') private fullCalender: ElementRef
+
   public calendar: any;
-  private element: ElementRef;
   private initFlag: boolean = false;
 
-  constructor(element: ElementRef) { 
-    this.element = element;
+  constructor() {
   }
 
   ngOnInit() {
@@ -28,6 +30,13 @@ export class FullCalendarDirective implements OnInit, OnDestroy {
     this.initFlag = true;
     if (this.options) {
       this.build();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
+    if (changes.options.currentValue) {
+      jQuery(this.fullCalender.nativeElement).fullCalendar(changes.options.currentValue);
     }
   }
 
@@ -44,8 +53,7 @@ export class FullCalendarDirective implements OnInit, OnDestroy {
     if (typeof jQuery.fullCalendar === 'undefined') {
       throw new Error('Configuration issue: Embedding jquery.fullCalendar.js lib is mandatory');
     }
-
-    this.calendar = jQuery(this.element.nativeElement).fullCalendar(this.options);
+    this.calendar = jQuery(this.fullCalender.nativeElement).fullCalendar(this.options);
   }
 
   onResize() {

@@ -10,7 +10,7 @@ import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 
 import { UserService } from '../services/user.service';
 import { MailService } from '../services/mail.service';
-import { FullCalendarDirective } from './full-calendar/full-calendar.component';
+import { FullCalendarComponent } from './full-calendar/full-calendar.component';
 
 @NgModule({
   imports: [
@@ -18,8 +18,8 @@ import { FullCalendarDirective } from './full-calendar/full-calendar.component';
     RouterModule,
     WidgetsModule
   ],
-  declarations: [TopNavComponent, SidebarComponent, FooterComponent, ToggleButtonComponent, FullCalendarDirective],
-  exports: [TopNavComponent, SidebarComponent, FooterComponent, FullCalendarDirective],
+  declarations: [TopNavComponent, SidebarComponent, FooterComponent, ToggleButtonComponent, FullCalendarComponent],
+  exports: [TopNavComponent, SidebarComponent, FooterComponent, FullCalendarComponent],
   providers: [UserService, MailService]
 })
 export class ComponentsModule { }
