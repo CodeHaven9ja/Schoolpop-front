@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ComponentsModule } from '../../common/components/components.module';
 import { RouterModule } from '@angular/router';
 
+import { ModalModule, TabsModule } from 'ngx-bootstrap';
+
 import { WidgetsModule } from '../../common/components/widgets/widgets.module';
 
 import { DashboardComponent } from './dashboard.component';
@@ -22,6 +24,8 @@ import { AuthenticatedGuard } from '../../common/guards/authenticated.guard';
     ComponentsModule,
     RouterModule,
     ComponentsModule,
+    ModalModule.forRoot(),
+    TabsModule.forRoot(),
     WidgetsModule
   ],
   declarations: [DashboardComponent],

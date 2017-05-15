@@ -1,3 +1,14 @@
-<p>
-  view works!
-</p>
+<div class="panel">
+  <header class="panel-heading">
+    <a [routerLink]="['../']" class="back"><< back</a>
+    Students
+  </header>
+  <div class="panel-body">
+    <tabset [justified]="true">
+      <tab heading="List">
+        <sp-user-list [usersIdList]="class.students"></sp-user-list>
+      </tab>
+      <tab heading="Add Student"></tab>
+    </tabset>
+  </div>
+</div>

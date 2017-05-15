@@ -17,6 +17,7 @@ import { ComposeComponent } from './views/mail/compose/compose.component';
 import { ClassRoomComponent } from './views/class-room/class-room.component';
 import { ClassRoomIndexComponent } from './views/class-room/index/index.component';
 import { ClassRoomViewComponent } from './views/class-room/view/view.component';
+import { ClassroomResolve } from './common/resolvers/classroom.resolver';
 export const ROUTES:Routes = [
   {
     "path" : '',
@@ -59,7 +60,10 @@ export const ROUTES:Routes = [
           },
           {
             path : ':id',
-            component: ClassRoomViewComponent
+            component: ClassRoomViewComponent,
+            resolve: {
+              classroom: ClassroomResolve
+            }
           }
         ]
       },

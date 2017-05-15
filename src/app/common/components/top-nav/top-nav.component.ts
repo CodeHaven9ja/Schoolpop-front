@@ -11,6 +11,10 @@ import { MailService } from '../../services/mail.service';
 
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { SearchService } from '../../services/search.service';
+
+import 'rxjs/add/operator/distinctUntilChanged';
 
 declare var jQuery: any;
 
@@ -24,22 +28,36 @@ export class TopNavComponent implements OnInit {
   mails: SingleMail[] = [];
   user: User;
 
-  uc:number = 0;
+  uc: number = 0;
+
+  terms: string = ""
 
   mailMapping:
-      {[k: string]: string} = {'=0': 'No unread mails.', '=1': 'One unread mail.', 'other': '# unread mails.'};
+  { [k: string]: string } = { '=0': 'No unread mails.', '=1': 'One unread mail.', 'other': '# unread mails.' };
 
-  constructor(private us: UserService, private ms: MailService) {}
+
+  constructor(private us: UserService, private ms: MailService, private ss: SearchService) {
+
+  }
 
   ngOnInit() {
     this.user = this.us.getCurrentUser();
     this.ms.uc.subscribe(
-      (count:number) => this.uc = count
+      (count: number) => this.uc = count
     )
 
     this.ms.um.subscribe(
-      (mails:SingleMail[]) => this.mails = mails
+      (mails: SingleMail[]) => this.mails = mails
     )
+
+    // this.ss.getQObservable.subscribe(
+    //   (s) => console.log(s.search)
+    // )
+  }
+
+  search(terms: string) {
+    if (terms.length > 0)
+      this.ss.qSubject.next(terms);
   }
 
   logout() {

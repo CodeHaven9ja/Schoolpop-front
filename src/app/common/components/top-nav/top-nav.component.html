@@ -51,8 +51,8 @@
     <div class="right-notification">
       <ul class="notification-menu">
         <li>
-          <form class="search-content" action="index.html" method="post">
-            <input type="text" class="form-control" name="keyword" placeholder="Search...">
+          <form class="search-content">
+            <input type="text" #term (keyup.enter)="search(term.value)" class="form-control" name="keyword" placeholder="Search...">
           </form>
         </li>
         <li>

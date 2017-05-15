@@ -68,12 +68,12 @@ export class ClassRoomComponent implements OnInit {
     let name: string = control.value;
     let isInvalid = false;
 
-    console.log(this.classes);
+    // console.log(this.classes);
 
     for (let i = 0; i < this.classes.length; i++) {
       if (this.classes[i].commonName && name.toLowerCase() === this.classes[i].commonName.toLowerCase()) {
         isInvalid = true;
-        console.log("Is Invalid", isInvalid);
+        // console.log("Is Invalid", isInvalid);
       }
       break;
     }

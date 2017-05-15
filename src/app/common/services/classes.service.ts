@@ -32,6 +32,11 @@ export class ClassesService {
     .map((res:Response) => res.json().result);
   }
 
+  getClass(classId:string) {
+    return this.http.get(this.baseUrl+"/classes/ClassRoom/"+classId, this.opts)
+      .map((res:Response) => res.json());
+  }
+
   addClass(clazz) {
     return this.http.post(this.baseUrl+"/classes/ClassRoom", clazz, this.opts);
   }

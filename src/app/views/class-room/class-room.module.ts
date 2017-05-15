@@ -11,6 +11,9 @@ import { ClassesService } from '../../common/services/classes.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'ng2-toastr';
+import { ClassroomResolve } from '../../common/resolvers/classroom.resolver';
+import { TabsModule } from 'ngx-bootstrap';
+import { UserListModule } from '../../common/components/widgets/user-list/user-list.component';
 
 @NgModule({
   imports: [
@@ -19,11 +22,14 @@ import { ToastModule } from 'ng2-toastr';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     ToastModule.forRoot(),
-    RouterModule
+    TabsModule.forRoot(),
+    RouterModule,
+    UserListModule
   ],
   declarations: [ClassRoomComponent, ClassRoomIndexComponent, ClassRoomViewComponent],
   providers: [
     RouteService,
+    ClassroomResolve,
     ClassesService
   ]
 })

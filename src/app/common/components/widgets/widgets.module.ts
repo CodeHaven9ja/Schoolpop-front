@@ -10,6 +10,8 @@ import { GravatarComponent } from './gravatar/gravatar.component';
 import { MailBoxItemComponent } from './mail-box-item/mail-box-item.component';
 import { NewsWidgetComponent } from './news-widget/news-widget/news-widget.component';
 import { OwlModule } from './owl-carousel/owl.module';
+import { UserListComponent } from './user-list/user-list.component';
+import { UserListItemComponent } from './user-list-item/user-list-item.component';
 
 @NgModule({
   imports: [
@@ -17,10 +19,16 @@ import { OwlModule } from './owl-carousel/owl.module';
     BrowserModule,
     RouterModule,
     NewsWidgetModule,
+    RouterModule,
     OwlModule
   ],
   declarations: [SingleMailComponent, GravatarComponent, MailBoxItemComponent, NewsWidgetComponent],
-  exports: [SingleMailComponent, GravatarComponent, MailBoxItemComponent, NewsWidgetComponent],
+  exports: [
+    SingleMailComponent, 
+    GravatarComponent, 
+    MailBoxItemComponent, 
+    NewsWidgetComponent
+  ],
   providers:[UserService]
 })
 export class WidgetsModule { }
