@@ -1,0 +1,14 @@
+<div class="widget">
+  <div class="title">
+    <h1>
+      {{config.title}}
+    </h1>
+  </div>
+  <div class="team-m">
+    <ng-container *ngFor="let user of config.users | async">
+      <a href="/user/{{user.objectId}}" tooltip="{{user.firstName}} {{user.lastName}}" placement="bottom">
+        <app-gravatar [user]="user" [width]="config.imgWidth"></app-gravatar>
+      </a>
+    </ng-container>
+  </div>
+</div>

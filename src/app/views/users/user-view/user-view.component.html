@@ -1,0 +1,23 @@
+<div [ngStyle]="{'background': background}" class="profile-hero">
+  <div class="profile-intro">
+    <app-gravatar [user]="user" [width]="70"></app-gravatar>
+    <h1>{{user.firstName}} {{user.lastName}}</h1>
+    <span>{{user.school.commonName}}</span>
+  </div>
+  <div class="profile-follow">
+    <a *ngIf="isAdminOrTeacher && user.role == 'user'" href="#" class="btn btn-success"> <i class="fa fa-plus"></i> Add Report</a>
+    <!--<a href="#" class="btn btn-default"> <i class="fa fa-check"></i> Follow me</a>-->
+    <a href="#" class="btn btn-default"> <i class="fa fa-comment"></i> Message</a>
+  </div>
+</div>
+
+<div class="wrapper no-pad">
+  <div class="profile-desk">
+    <aside class="p-aside">
+
+    </aside>
+    <aside class="p-short-info">
+      <sp-userbox *ngIf="user.role == 'parent' || user.role == 'user'" [config]="userboxConfig"></sp-userbox>
+    </aside>
+  </div>
+</div>

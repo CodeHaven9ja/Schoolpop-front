@@ -18,6 +18,7 @@ import { ClassRoomComponent } from './views/class-room/class-room.component';
 import { ClassRoomIndexComponent } from './views/class-room/index/index.component';
 import { ClassRoomViewComponent } from './views/class-room/view/view.component';
 import { ClassroomResolve } from './common/resolvers/classroom.resolver';
+import { UsersRoute } from './views/users/users-route';
 export const ROUTES:Routes = [
   {
     "path" : '',
@@ -42,6 +43,7 @@ export const ROUTES:Routes = [
     path: '',
     component: BasicComponent,
     children: [
+      UsersRoute,
       {
         path: 'dashboard',
         component: DashboardComponent

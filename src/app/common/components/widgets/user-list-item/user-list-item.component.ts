@@ -19,10 +19,12 @@ export class UserListItemComponent implements OnInit {
   constructor(private us: UserService) { }
 
   ngOnInit() {
-    if (this.userId) {
+    if (this.userId.length) {
       this.us.getUser(this.userId).subscribe(
         (u) => this.user = u
       )
+    } else if(this.user) {
+      this.userId = this.user.objectId;
     }
   }
 

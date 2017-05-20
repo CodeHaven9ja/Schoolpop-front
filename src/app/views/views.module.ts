@@ -9,6 +9,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { LandingModule } from './landing/landing.module';
 import { MailModule } from './mail/mail.module';
 import { WidgetsModule } from '../common/components/widgets/widgets.module';
+import { UsersModule } from './users/users.module';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { WidgetsModule } from '../common/components/widgets/widgets.module';
     LandingModule,
     MailModule,
     WidgetsModule,
-    ClassRoomModule
+    ClassRoomModule,
+    UsersModule
   ],
   declarations: []
 })

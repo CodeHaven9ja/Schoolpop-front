@@ -26,7 +26,14 @@ export class UserService {
   }
 
   getUser(id:string):Observable<User> {
-    let options = this.getOptions();
+    // let options = this.getOptions();
+
+    let options = new RequestOptions({
+      headers: this.getOptions().headers,
+      params: {
+        include: ['school', 'profile']
+      }
+    });
 
     return this.http.get(this.baseUrl+"/classes/_User/"+id, options)
     .map((res:Response) => {
