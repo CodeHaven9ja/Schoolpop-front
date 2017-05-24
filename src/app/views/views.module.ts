@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 
 import { AuthModule } from './auth/auth.module';
-import { LayoutsModule } from './../common/layouts/layouts.module';
+import { LayoutsModule } from '../common/layouts/layouts.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { LandingModule } from './landing/landing.module';
 import { MailModule } from './mail/mail.module';

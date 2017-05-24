@@ -58,7 +58,7 @@
         <li>
           <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             <app-gravatar [user]="user" [width]="32"></app-gravatar>
-            {{user.firstName}} {{user.lastName}}
+            {{user.get("firstName")}} {{user.get("lastName")}}
             <span class=" fa fa-angle-down"></span>
           </a>
           <ul class="dropdown-menu dropdown-usermenu purple pull-right">

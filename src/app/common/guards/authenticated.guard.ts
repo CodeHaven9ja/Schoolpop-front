@@ -9,7 +9,8 @@ export class AuthenticatedGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-      if (this.us.getCurrentUser()) {
+      if (Parse.User.current()) {
+        console.log(Parse.User.current().get("firstName"));
         return true;
       } else {
         this.router.navigate(['/login'])

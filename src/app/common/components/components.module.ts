@@ -14,6 +14,7 @@ import { FullCalendarComponent } from './full-calendar/full-calendar.component';
 import { SearchService } from '../services/search.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { ParseService } from '../services/parse.service';
 
 @NgModule({
   imports: [
@@ -25,6 +26,6 @@ import { FormsModule } from '@angular/forms';
   ],
   declarations: [TopNavComponent, SidebarComponent, FooterComponent, ToggleButtonComponent, FullCalendarComponent],
   exports: [TopNavComponent, SidebarComponent, FooterComponent, FullCalendarComponent],
-  providers: [UserService, MailService, SearchService]
+  providers: [UserService, MailService, SearchService, ParseService]
 })
 export class ComponentsModule { }

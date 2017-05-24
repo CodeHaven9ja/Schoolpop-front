@@ -1,5 +1,5 @@
 <p>
   <a [routerLink]="['/user', userId]">
-    {{user?.firstName}} {{user?.lastName}}
+    {{user?.get("firstName")}} {{user?.get("lastName")}}
   </a>
 </p>

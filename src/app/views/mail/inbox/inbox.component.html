@@ -1,7 +1,7 @@
 <div class="inbox-body no-pad">
   <table class="table table-inbox table-hover">
     <tbody>
-      <tr [mail]="mail" *ngFor="let mail of mails;  let i=index" [avi-width]="32" [ngClass]="!mail.isRead ? 'unread': ''" (click)="navigateToMail(mail.objectId)"></tr>
+      <tr [mail]="mail" *ngFor="let mail of mails;  let i=index" [avi-width]="32" [ngClass]="!mail.get('isRead') ? 'unread': ''" (click)="navigateToMail(mail.id)"></tr>
     </tbody>
   </table>
 </div>

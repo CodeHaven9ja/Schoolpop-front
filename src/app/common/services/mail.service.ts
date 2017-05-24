@@ -8,7 +8,6 @@ import 'rxjs/add/operator/map';
 
 import { User } from '../models/user';
 import { UserService } from './user.service';
-import { SingleMail } from '../components/widgets/single-mail/single-mail.component';
 
 @Injectable()
 export class MailService {
@@ -26,10 +25,10 @@ export class MailService {
   }
 
   // Unread mails
-  private unReadMails = new Subject<SingleMail[]>();
+  private unReadMails = new Subject<Parse.Object[]>();
   um = this.unReadMails.asObservable();
 
-  setUnreadMails(m:SingleMail[]){
+  setUnreadMails(m: Parse.Object[]){
     this.unReadMails.next(m);
   }
 
@@ -37,7 +36,7 @@ export class MailService {
     this.unReadMails.error(error);
   }
 
-  currentUser:User;
+  currentUser:Parse.User;
   opts: RequestOptions;
 
   baseUrl: string = "https://api.schoolpop.ng/1";
@@ -46,23 +45,23 @@ export class MailService {
     this.opts = us.getOptions();
   }
 
-  getUnreadMails() {
+  getUnreadMails():Observable<Parse.Object[]> {
+    let query = new Parse.Query("Mail");
+    query
+      .equalTo("to", this.us.currentUser)
+      .equalTo("isRead", false)
+      .include(['message', 'from'])
+      .descending("createdAt");
+
+    let findPromise = new Promise((resolve, reject) => {
+      query.find().then((mails) => {
+        resolve(mails);
+      }, (err) => {
+        reject(err);
+      })
+    })
     let ticker = new ObservableUtil().getTicker(0, 1000*10);
-
-    let options = new RequestOptions({
-      headers: this.opts.headers,
-      params: {
-        "where" :{
-          "to" : this.us.getUserPointer(this.us.currentUser),
-          "isRead" : false          
-        },
-        include: ['message', 'from'],
-        order: "-createdAt"
-      }
-    });
-
-    return ticker.flatMap(() => this.http.get(this.baseUrl+"/classes/Mail", options))
-    .map((res:Response) => res.json().results);
+    return ticker.flatMap(() => Observable.fromPromise(findPromise));
   }
 
   unTicked() {
@@ -99,36 +98,44 @@ export class MailService {
   }
   
   getMails(limit:number  = 10, skip:number = 0) {
-    let options = new RequestOptions({
-      headers: this.opts.headers,
-      params: {
-        "where" :{
-          "to" : this.us.getUserPointer(this.us.currentUser)         
-        },
-        include: ['message', 'from'],
-        limit: limit,
-        order: "-createdAt"
-      }
+    var Mail = Parse.Object.extend("Mail");
+    var query = new Parse.Query(Mail);
+    query
+      .equalTo("to", this.us.currentUser)
+      .include(['message', 'from'])
+      .limit(limit)
+      .skip(skip)
+      .descending("createdAt");
+
+    let queryPromise = new Promise((resolve, reject) => {
+      query.find().then((mails) => {
+        resolve(mails);
+      }, (err) => {
+        reject(err);
+      })
     });
 
-    return this.http.get(this.baseUrl+"/classes/Mail", options)
-    .map((res:Response) => res.json().results);
+    return Observable.fromPromise(queryPromise);
   }
   getSentMails(limit:number  = 10, skip:number = 0) {
-    let options = new RequestOptions({
-      headers: this.opts.headers,
-      params: {
-        "where" :{
-          "from": this.us.getUserPointer(this.us.currentUser)         
-        },
-        include: ['message', 'to', 'from'],
-        limit: limit,
-        order: "-createdAt"
-      }
+    var Mail = Parse.Object.extend("Mail");
+    var query = new Parse.Query(Mail);
+    query
+      .equalTo("from", this.us.currentUser)
+      .include(['message', 'from', 'to'])
+      .limit(limit)
+      .skip(skip)
+      .descending("createdAt");
+
+    let queryPromise = new Promise((resolve, reject) => {
+      query.find().then((mails) => {
+        resolve(mails);
+      }, (err) => {
+        reject(err);
+      })
     });
 
-    return this.http.get(this.baseUrl+"/classes/Mail", options)
-    .map((res:Response) => res.json().results);
+    return Observable.fromPromise(queryPromise);
   }
 
   markAsRead(id:string) {

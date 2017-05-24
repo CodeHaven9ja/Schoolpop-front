@@ -4,7 +4,6 @@ import { Response } from '@angular/http';
 import { Subscription } from 'rxjs/Rx';
 
 import { MailService } from '../../common/services/mail.service';
-import { SingleMail } from '../../common/components/widgets/single-mail/single-mail.component';
 
 @Component({
   selector: 'app-mail',

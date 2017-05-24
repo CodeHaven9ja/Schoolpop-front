@@ -13,7 +13,7 @@ export class ProfileService {
 
   constructor(private http: Http, private us:UserService) { }
 
-  getParent(user: User) {
+  getParent(user: Parse.User) {
     let options = new RequestOptions({
       headers: this.us.getOptions().headers,
       params: {
@@ -38,7 +38,7 @@ export class ProfileService {
       }).toArray();
   }
 
-  getChildren(user:User) {
+  getChildren(user:Parse.User):Observable<Parse.User[]> {
     let options = new RequestOptions({
       headers: this.us.getOptions().headers,
       params: {
@@ -50,16 +50,42 @@ export class ProfileService {
       }
     });
 
-    return this.http.get(this.baseUrl+"/classes/Profile", options)
-    .flatMap((res:Response) => {
-      let users:User[] = [];
-      let u:any[] = res.json().results;
-      for(let i = 0; i < u.length; i++) {
-        let user = u[i].user;
-        users.push(user);
+    var Profile = Parse.Object.extend("Profile");
+    var query = new Parse.Query(Profile);
+    query.equalTo("parent", user);
+    query.include(['user']);
+    query.descending("createdAt");
+
+    let findPromise = new Promise((resolve, reject) => {
+      query.find().then((users) => {
+        resolve(users);
+      }, (err) => {
+        reject(err);
+      });
+    });
+
+    return Observable.fromPromise(findPromise).flatMap((profiles: Parse.Object[]) => {
+      let p:Parse.Object[] = profiles;
+      let us:Parse.User[] = [];
+
+      for(let i = 0; i< p.length; i++) {
+        let u:Parse.User = p[i].get("user");
+        us.push(u);
       }
-      return users;
+      return us;
     }).toArray();
+
+
+    // return this.http.get(this.baseUrl+"/classes/Profile", options)
+    // .flatMap((res:Response) => {
+    //   let users:User[] = [];
+    //   let u:any[] = res.json().results;
+    //   for(let i = 0; i < u.length; i++) {
+    //     let user = u[i].user;
+    //     users.push(user);
+    //   }
+    //   return users;
+    // }).toArray();
   }
 
 }

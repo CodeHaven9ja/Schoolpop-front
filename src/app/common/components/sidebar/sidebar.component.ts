@@ -16,7 +16,7 @@ declare var jQuery: any;
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
-  currentUser:User;
+  currentUser:Parse.User;
   uc:number = 0;
   constructor(private us:UserService, private ms:MailService) { }
 

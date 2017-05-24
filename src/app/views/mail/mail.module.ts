@@ -22,12 +22,14 @@ import { OutboxResolve } from '../../common/resolvers/outbox-resolver';
 
 import { WidgetsModule } from '../../common/components/widgets/widgets.module';
 import { ComposeComponent } from './compose/compose.component';
+import { MailBoxItemModule } from '../../common/components/widgets/mail-box-item/mail-box-item.component';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
     WidgetsModule,
+    MailBoxItemModule,
     TagInputModule, 
     BrowserAnimationsModule,
     FormsModule,

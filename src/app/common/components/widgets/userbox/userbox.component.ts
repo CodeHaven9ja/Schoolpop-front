@@ -20,11 +20,11 @@ export class UserboxComponent implements OnInit {
 
 interface IUserbox {
   title:string;
-  users: Observable<User[]>;
+  users: Observable<Parse.User[]>;
   imgWidth:number;
 }
 export class UserboxConfig implements IUserbox {
   imgWidth: number;
   title: string;
-  users: Observable<User[]>;
+  users: Observable<Parse.User[]>;
 }

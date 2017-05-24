@@ -7,7 +7,7 @@ import { User } from '../models/user';
 import { ProfileService } from '../services/profile.service';
 
 @Injectable()
-export class UserResolve implements Resolve<User> {
+export class UserResolve implements Resolve<Parse.User> {
 
   constructor(private us: UserService) {}
 
@@ -19,26 +19,25 @@ export class UserResolve implements Resolve<User> {
 
 @Injectable() 
 export class UserboxConfigResolve implements Resolve<UserboxConfig> {
-  user:User;
+  user:Parse.User;
   constructor(private us: UserService, private ps:ProfileService) { }
 
   resolve(route: ActivatedRouteSnapshot) {
     let id = route.params['id'];
     return this.us.getUser(id)
-    .map((user:User) => {
+    .map((user:Parse.User) => {
       this.user = user;
-      if (this.user.role == 'user') {
+      if (this.user.get("role") == 'user') {
         return this.ps.getParent(user);
-      } else if (this.user.role == 'parent') {
+      } else if (this.user.get("role") == 'parent') {
         return this.ps.getChildren(user);
       }
     })
-    .flatMap((users:Observable<User[]>) => {
-      console.log(users);
+    .flatMap((users:Observable<Parse.User[]>) => {
       let config = new UserboxConfig();
-      if (this.user.role == 'parent') {
+      if (this.user.get("role") == 'parent') {
         config.title = "Children / Wards";
-      } else if (this.user.role == 'user') {
+      } else if (this.user.get("role") == 'user') {
         config.title = "Parents";
       }
       config.imgWidth = 50;

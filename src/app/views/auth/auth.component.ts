@@ -45,11 +45,12 @@ export class AuthComponent implements OnInit {
     // console.log(this.authForm.value)
     this.isLoading = true;
     const cred = this.authForm.value;
-    this.us.login(cred).subscribe(
-      (user: User) => {
+    this.us.parseLogin(cred).subscribe(
+      (user: Parse.User) => {
+        // console.log(user);
         this.isLoading = false;
-        this.us.currentUser = null;
-        this.us.setCurrentUser(user);
+        // this.us.currentUser = null;
+        // this.us.setCurrentUser(user);
         location.href = "/dashboard";
       },
       (err: Response) => {

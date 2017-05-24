@@ -15,27 +15,30 @@
         <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
           <a routerLink="/dashboard"><i class="fa fa-home"></i> <span>Dashboard</span></a>
         </li>
-        <li *ngIf="currentUser.role == 'admin'" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+        <li *ngIf="currentUser.get('role') == 'admin'" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
           <a routerLink="/class"><i class="fa fa-home"></i> <span>Classes</span></a>
         </li>
         <li class="menu-list">
           <a #s><i class="fa fa-laptop"></i>  <span>Students</span></a>
           <ul class="child-list">
-            <li *ngIf="currentUser.role == 'admin' || currentUser.role == 'teacher'">
+            <li *ngIf="currentUser.get('role') == 'admin' || currentUser.get('role') == 'teacher'">
               <a>Enrollment</a>
             </li>
-            <li>
+            <li *ngIf="currentUser.get('role') == 'parent'">
+              <a [routerLink]="['/user']">View Children</a>
+            </li>
+            <li *ngIf="currentUser.get('role') == 'user'">
               <a>Attendance</a>
             </li>
-            <li>
+            <li *ngIf="currentUser.get('role') == 'user'">
               <a>Reports</a>
             </li>
-            <li *ngIf="currentUser.role == 'admin' || currentUser.role == 'teacher'">
+            <li *ngIf="currentUser.get('role') == 'admin' || currentUser.get('role') == 'teacher'">
               <a>Demographics</a>
             </li>
           </ul>
         </li>
-        <li class="menu-list" *ngIf="currentUser.role == 'admin' || currentUser.role == 'teacher'">
+        <li class="menu-list" *ngIf="currentUser.get('role') == 'admin' || currentUser.get('role') == 'teacher'">
           <a #p><i class="fa fa-book"></i>  <span>Parents</span></a>
           <ul class="child-list">
             <li>

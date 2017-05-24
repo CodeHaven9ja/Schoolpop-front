@@ -1,5 +1,5 @@
-<img *ngIf="user && user.img; else g" src="{{user.img.url}}" [width]="width" alt="">
+<img *ngIf="user && user.get('img'); else g" src="{{user.get('img').url()}}" [width]="width" height="{{width}}" alt="">
 
 <ng-template #g>
-  <img src="assets/img/avatar-mini.jpg" [width]="width" alt="">
+  <img src="assets/img/avatar-mini.jpg" [width]="width" height="{{width}}" alt="">
 </ng-template>

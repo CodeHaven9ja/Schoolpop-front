@@ -22,11 +22,10 @@ import { UserListItemComponent } from './user-list-item/user-list-item.component
     RouterModule,
     OwlModule
   ],
-  declarations: [SingleMailComponent, GravatarComponent, MailBoxItemComponent, NewsWidgetComponent],
+  declarations: [SingleMailComponent, GravatarComponent, NewsWidgetComponent],
   exports: [
     SingleMailComponent, 
-    GravatarComponent, 
-    MailBoxItemComponent, 
+    GravatarComponent,
     NewsWidgetComponent
   ],
   providers:[UserService]

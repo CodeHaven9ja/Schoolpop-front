@@ -2,6 +2,7 @@ import { UserViewComponent } from './user-view/user-view.component';
 import { UsersIndexComponent } from './users-index/users-index.component';
 import { UsersComponent } from './users.component';
 import { UserResolve, UserboxConfigResolve } from '../../common/resolvers/user-resolver';
+import { TopicResolve } from '../../common/resolvers/topic.resolver';
 export const UsersRoute = {
   path : 'user',
   component: UsersComponent,
@@ -15,7 +16,8 @@ export const UsersRoute = {
       component: UserViewComponent,
       resolve: {
         user: UserResolve,
-        config: UserboxConfigResolve
+        config: UserboxConfigResolve,
+        topics: TopicResolve
       }
     }
   ]

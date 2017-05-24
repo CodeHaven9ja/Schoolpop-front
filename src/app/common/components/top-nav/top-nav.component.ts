@@ -6,7 +6,6 @@ import { Response } from '@angular/http';
 import { adjustMainContentHeight } from '../../../app.js.helpers';
 import { visibleSubMenuClose } from '../../../app.js.helpers';
 
-import { SingleMail } from '../widgets/single-mail/single-mail.component';
 import { MailService } from '../../services/mail.service';
 
 import { UserService } from '../../services/user.service';
@@ -25,8 +24,8 @@ declare var jQuery: any;
 })
 export class TopNavComponent implements OnInit {
 
-  mails: SingleMail[] = [];
-  user: User;
+  mails: Parse.Object[] = [];
+  user: Parse.User;
 
   uc: number = 0;
 
@@ -47,8 +46,14 @@ export class TopNavComponent implements OnInit {
     )
 
     this.ms.um.subscribe(
-      (mails: SingleMail[]) => this.mails = mails
+      (mails: Parse.Object[]) => this.mails = mails
     )
+
+    // this.us.getUsersFromParse().subscribe(
+    //   (users) => {
+    //     console.log(users);
+    //   }
+    // )
 
     // this.ss.getQObservable.subscribe(
     //   (s) => console.log(s.search)

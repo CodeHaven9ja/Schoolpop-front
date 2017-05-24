@@ -11,7 +11,7 @@ export class UsersComponent implements OnInit {
   constructor(private rs: RouteService) { }
 
   ngOnInit() {
-    this.rs.setBc("sticky-header");
+    this.rs.setBc('sticky-header');
   }
 
 }

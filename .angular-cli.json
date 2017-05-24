@@ -34,6 +34,7 @@
         "../node_modules/owl.carousel/dist/owl.carousel.min.js",
         "../node_modules/bootstrap/dist/js/bootstrap.js",
         "../node_modules/moment/min/moment.min.js",
+        "../node_modules/parse/dist/parse.js",
         "../node_modules/fullcalendar/dist/fullcalendar.min.js"
       ],
       "environmentSource": "environments/environment.ts",

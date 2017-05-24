@@ -26,11 +26,11 @@ import { adjustMainContentHeight } from './app.js.helpers';
 import { RouteService } from './common/services/route.service';
 import { MailService } from './common/services/mail.service';
 import { MomentUtil } from './moment.util';
-import { SingleMail } from './common/components/widgets/single-mail/single-mail.component';
 import { User } from './common/models/user';
 import { UserService } from './common/services/user.service';
 
 declare var jQuery: any;
+declare var Parse: any;
 
 @Component({
   selector: 'body',
@@ -39,7 +39,7 @@ declare var jQuery: any;
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'app works!';
-  bc = "sticky-header";
+  bc = 'sticky-header';
   color = 'primary';
 
   @ViewChild('spinnerElement') spinnerElement: ElementRef;
@@ -47,11 +47,11 @@ export class AppComponent implements OnInit, OnDestroy {
   sub: Subscription;
   sub2: Subscription;
 
-  unreadCount: number = 0;
+  unreadCount = 0;
 
-  mails: SingleMail[] = [];
-  user: User;
-  m: any[] = [];
+  mails: Parse.Object[] = [];
+  user: Parse.User;
+  m: Parse.Object[] = [];
 
   constructor(
     private rs: RouteService,
@@ -71,11 +71,11 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.rs.bc.subscribe(
       (c) => {
-        let body = jQuery("body");
-        body.attr("class", "");
+        const body = jQuery('body');
+        body.attr('class', '');
         body.addClass(c);
       }
-    )
+    );
     adjustMainContentHeight();
 
     this.user = this.us.getCurrentUser();
@@ -103,34 +103,23 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private poll() {
+    // Switch to live query
     return this.ms.getUnreadMails().subscribe(
       (mails) => {
-        this.m = mails;
-        let momentUtil = new MomentUtil();
-        for (let i = 0; i < this.m.length; i++) {
-          let mm = this.m[i];
-          let m = new SingleMail();
-          m.fromUser = mm.from.firstName;
-          m.from = mm.from;
-          m.to = mm.to;
-          m.excerpt = mm.subject;
-          m.objectId = mm.objectId;
-          m.createdAt = momentUtil.timeDateAgo(mm.createdAt);
-          this.mails.push(m);
+        this.mails = mails;
+        if (this.unreadCount < mails.length) {
+          this.toastr.success('You have new messages');
         }
-        if (this.unreadCount < this.m.length) {
-          this.toastr.success("You have new messages");
-        }
-        this.unreadCount = this.m.length;
-        this.ms.setUnreadCount(this.m.length);
+        this.unreadCount = mails.length;
+        this.ms.setUnreadCount(mails.length);
         this.ms.setUnreadMails(this.mails);
       },
       (err: Response) => {
-        console.log(err.json());
+        // console.log(err.json());
         this.ms.setUnreadCountError(err);
         this.ms.setUnreadMailsError(err);
       }
-    )
+    );
   }
 
   private _navigationInterceptor(event: RouterEvent): void {
@@ -138,8 +127,8 @@ export class AppComponent implements OnInit, OnDestroy {
       // We wanna run this function outside of Angular's zone to
       // bypass change detection
       this.ngZone.runOutsideAngular(() => {
-        let ne = jQuery(this.spinnerElement.nativeElement);
-        ne.removeClass("loading-overlay-off").addClass("loading-overlay");
+        const ne = jQuery(this.spinnerElement.nativeElement);
+        ne.removeClass('loading-overlay-off').addClass('loading-overlay');
       });
     }
 
@@ -158,10 +147,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private _hideSpinner(): void {
     // We wanna run this function outside of Angular's zone to
-    // bypass change detection, 
+    // bypass change detection,
     this.ngZone.runOutsideAngular(() => {
-      let ne = jQuery(this.spinnerElement.nativeElement);
-      ne.removeClass("loading-overlay").addClass("loading-overlay-off");
+      const ne = jQuery(this.spinnerElement.nativeElement);
+      ne.removeClass('loading-overlay').addClass('loading-overlay-off');
     });
   }
 

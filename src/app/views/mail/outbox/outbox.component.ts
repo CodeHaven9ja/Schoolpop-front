@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SingleMail } from '../../../common/components/widgets/single-mail/single-mail.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RouteService } from '../../../common/services/route.service';
 
@@ -10,7 +9,7 @@ import { RouteService } from '../../../common/services/route.service';
 })
 export class OutboxComponent implements OnInit {
 
-  mails: SingleMail[] = [];
+  mails: Parse.Object[] = [];
   unReadCount = 0;
 
   constructor(private rs:RouteService, private route: ActivatedRoute, private router:Router) { }

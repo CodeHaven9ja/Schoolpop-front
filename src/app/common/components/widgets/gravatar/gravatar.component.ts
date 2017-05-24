@@ -12,7 +12,7 @@ import { User } from '../../../models/user';
 export class GravatarComponent implements OnInit {
 
   @Input()
-  user:User;
+  user:Parse.User;
 
   @Input()
   userId:string;

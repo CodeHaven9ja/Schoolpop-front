@@ -4,22 +4,22 @@
   </label>
 </td>
 <!--<td class="inbox-small-cells"><i class="fa fa-star inbox-started"></i></td>-->
-<ng-container *ngIf="currentUser.objectId !== mail.from.objectId; else s">
+<ng-container *ngIf="currentUser.id !== mail.get('from').id; else s">
   <td>
     <a href="#" class="avatar">
-      <span class="bg-success">{{mail.from.firstName | slice:0:1}} {{mail.from.lastName | slice:0:1}}</span>
+      <span class="bg-success">{{mail.get("from").get("firstName") | slice:0:1}} {{mail.get("from").get("lastName") | slice:0:1}}</span>
     </a>
   </td>
-  <td class="view-message  dont-show" >{{mail.from.firstName}} {{mail.from.lastName}}</td>
+  <td class="view-message  dont-show" >{{mail.get("from").get("firstName")}} {{mail.get("from").get("lastName")}}</td>
 </ng-container>
 <ng-template #s>
   <td>
     <a href="#" class="avatar">
-      <span class="bg-success">{{mail.to.firstName | slice:0:1}} {{mail.to.lastName | slice:0:1}}</span>
+      <span class="bg-success">{{mail.get("to").get("firstName") | slice:0:1}} {{mail.get("to").get("lastName") | slice:0:1}}</span>
     </a>
   </td>
-  <td class="view-message  dont-show">{{mail.to.firstName}} {{mail.to.lastName}}</td>
+  <td class="view-message  dont-show">{{mail.get("to").get("firstName")}} {{mail.get("to").get("lastName")}}</td>
 </ng-template>
-<td class="view-message ">{{mail.subject}}</td>
+<td class="view-message ">{{mail.get("subject")}}</td>
 <td class="view-message  inbox-small-cells"><i class="fa fa-paperclip"></i></td>
-<td class="view-message  text-right">{{getCreatedAt(mail.createdAt)}}</td>
+<td class="view-message  text-right">{{getCreatedAt(mail.get("createdAt"))}}</td>

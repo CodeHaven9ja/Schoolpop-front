@@ -14,7 +14,7 @@ export class UserListItemComponent implements OnInit {
   userId:string;
 
   @Input()
-  user:User;
+  user:Parse.User;
 
   constructor(private us: UserService) { }
 
@@ -24,7 +24,7 @@ export class UserListItemComponent implements OnInit {
         (u) => this.user = u
       )
     } else if(this.user) {
-      this.userId = this.user.objectId;
+      this.userId = this.user.id;
     }
   }
 

@@ -5,7 +5,7 @@
     <span>{{user.school.commonName}}</span>
   </div>
   <div class="profile-follow">
-    <a *ngIf="isAdminOrTeacher && user.role == 'user'" href="#" class="btn btn-success"> <i class="fa fa-plus"></i> Add Report</a>
+    <a *ngIf="isAdminOrTeacher && user.role == 'user'" class="btn btn-success" (click)="showModal()"> <i class="fa fa-plus"></i> Add Report</a>
     <!--<a href="#" class="btn btn-default"> <i class="fa fa-check"></i> Follow me</a>-->
     <a href="#" class="btn btn-default"> <i class="fa fa-comment"></i> Message</a>
   </div>
@@ -19,5 +19,64 @@
     <aside class="p-short-info">
       <sp-userbox *ngIf="user.role == 'parent' || user.role == 'user'" [config]="userboxConfig"></sp-userbox>
     </aside>
+  </div>
+</div>
+
+<div *ngIf="isModalShown" [config]="{ show: true, backdrop: 'static' }" (onHidden)="onHidden()" bsModal #reportModal="bs-modal"
+  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Add Report</h4>
+        <button type="button" class="close pull-right" aria-label="Close" [disabled]="isLoading" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <form role="form" name="subject" [formGroup]="subjectForm" novalidate>
+              <div class="form-group">
+                <div class="row">
+                  <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">Subject</label>
+                  <div class="col-lg-10">
+                    <input formControlName="topic" 
+                      [(ngModel)]="asyncSelected"
+                      [typeahead]="dataSource" 
+                      typeaheadOptionsLimit="7" 
+                      typeaheadMinLength="0" 
+                      typeaheadOptionField="title"
+                      placeholder="Choose a subject"
+                      class="form-control">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="row">
+                  <label class="col-sm-2 control-label col-lg-2">CA Score</label>
+                  <div class="col-lg-10">
+                    <input formControlName="caScore" name="ca" type="number" class="form-control m-b-10">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="row">
+                  <label class="col-sm-2 control-label col-lg-2">Exam Score</label>
+                  <div class="col-lg-10">
+                    <input formControlName="examScore" type="number" class="form-control m-b-10">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" [disabled]="isLoading" (click)="hideModal()">Close</button>
+<button type="button" data-dismiss="modal" class="btn btn-info" (click)="onSubmit()" [disabled]="!subjectForm.valid || isLoading">Submit</button>
+      </div>
+    </div>
   </div>
 </div>

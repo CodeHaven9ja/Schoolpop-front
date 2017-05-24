@@ -1,8 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { SingleMail } from '../single-mail/single-mail.component';
+import { Component, OnInit, Input, NgModule } from '@angular/core';
 import { MomentUtil } from '../../../../moment.util';
 import { User } from '../../../models/user';
 import { UserService } from '../../../services/user.service';
+import { RouterModule } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'tr',
@@ -12,7 +14,7 @@ import { UserService } from '../../../services/user.service';
 export class MailBoxItemComponent implements OnInit {
 
   @Input()
-  mail:SingleMail;
+  mail: Parse.Object;
 
   @Input("avi-width")
   avatarWidth:number;
@@ -22,7 +24,7 @@ export class MailBoxItemComponent implements OnInit {
 
   momentUtil = new MomentUtil();
 
-  currentUser:User;
+  currentUser:Parse.User;
 
   constructor(private us: UserService) { 
     this.currentUser = us.getCurrentUser();
@@ -37,3 +39,22 @@ export class MailBoxItemComponent implements OnInit {
   }
 
 }
+
+@NgModule({
+  imports: [
+    CommonModule,
+    BrowserModule,
+    RouterModule,
+  ],
+  declarations: [
+    MailBoxItemComponent
+  ],
+  exports: [
+    MailBoxItemComponent
+  ],
+  providers: [
+    UserService
+  ]
+})
+export class MailBoxItemModule {}
+
