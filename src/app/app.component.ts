@@ -81,45 +81,63 @@ export class AppComponent implements OnInit, OnDestroy {
     this.user = this.us.getCurrentUser();
 
     if (this.user != null) {
-      this.sub2 = this.poll();
+      this.poll();
     } else {
       this.us.setLoginStatus(false);
     }
-
-    this.us.isLoggedIn.subscribe(
-      (status) => {
-        console.log(status);
-        if (!status || this.us.getCurrentUser() == null) {
-          this.user = null;
-          if (this.sub2) {
-            this.sub2.unsubscribe();
-          }
-        } else {
-          this.user = this.us.getCurrentUser();
-          this.sub2 = this.poll();
-        }
-      }
-    );
   }
 
   private poll() {
     // Switch to live query
-    return this.ms.getUnreadMails().subscribe(
-      (mails) => {
-        this.mails = mails;
-        if (this.unreadCount < mails.length) {
-          this.toastr.success('You have new messages');
-        }
-        this.unreadCount = mails.length;
-        this.ms.setUnreadCount(mails.length);
-        this.ms.setUnreadMails(this.mails);
-      },
-      (err: Response) => {
-        // console.log(err.json());
-        this.ms.setUnreadCountError(err);
-        this.ms.setUnreadMailsError(err);
+    let query = new Parse.Query("Mail");
+    query
+      .equalTo("to", this.us.currentUser)
+      .equalTo("isRead", false)
+      .include(['message', 'from'])
+      .descending("createdAt");
+    let subscription = query.subscribe();
+
+    subscription.on('open', () => {
+      console.log('subscription opened');
+    });
+
+    subscription.on('create', (object) => {
+      console.log('object created');
+      this.unreadCount++;
+      this.addToMailList(object);
+      this.toastr.success('You have new messages');
+      this.ms.setUnreadCount(this.unreadCount);
+      this.ms.setUnreadMails(this.mails);
+    });
+
+    subscription.on('enter', (object) => {
+      console.log('object entered', object);
+      this.unreadCount++;
+      this.addToMailList(object);
+      this.toastr.success('You have new messages');
+      this.ms.setUnreadCount(this.unreadCount);
+      this.ms.setUnreadMails(this.mails);
+    });
+    
+    subscription.on('leave', (object) => {
+      console.log('object left', object);
+      if (this.unreadCount > 0) {
+        this.unreadCount--;
       }
-    );
+      this.removeFromMailList(object);
+      this.ms.setUnreadCount(this.unreadCount);
+      this.ms.setUnreadMails(this.mails);
+    });
+  }
+
+  addToMailList(mail:Parse.Object) {
+    this.mails.push(mail);
+  }
+
+  removeFromMailList(mail: Parse.Object) {
+    this.mails = this.mails.filter((el) => {
+      return el.id !== mail.id;
+    })
   }
 
   private _navigationInterceptor(event: RouterEvent): void {

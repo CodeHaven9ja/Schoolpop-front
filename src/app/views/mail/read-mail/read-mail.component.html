@@ -2,7 +2,7 @@
 
   <div class="heading-inbox row">
     <div class="col-md-12">
-      <h4 class="title"> {{mail.subject}}</h4>
+      <h4 class="title"> {{mail.get("subject")}}</h4>
     </div>
   </div>
 
@@ -11,18 +11,18 @@
       <div class="col-md-6 col-xs-12">
         <div class="pull-left">
           <a class="avatar">
-            <span class="bg-success">{{mail.from.firstName | slice:0:1}}{{mail.from.lastName | slice:0:1}}</span>
+            <span class="bg-success">{{mail.get("from").get("firstName") | slice:0:1}}{{mail.get("from").get("lastName") | slice:0:1}}</span>
           </a>
         </div>
-        <div class="s-info" *ngIf="currentUser.objectId !== mail.from.objectId; else s">
-          <strong>{{mail.from.firstName}} {{mail.from.lastName}}</strong>
-          <span>[{{mail.from.email}}]</span>
+        <div class="s-info" *ngIf="currentUser.id !== mail.get('from').id; else s">
+          <strong>{{mail.get("from").get("firstName")}} {{mail.get("from").get("lastName")}}</strong>
+          <span>[{{mail.get("from").get("email")}}]</span>
         </div>
 
         <ng-template #s>
           <div class="s-info">
-            <strong>{{mail.to.firstName}} {{mail.to.lastName}}</strong>
-            <span>[{{mail.to.email}}]</span>
+            <strong>{{mail.get("to").get("firstName")}} {{mail.get("to").get("lastName")}}</strong>
+            <span>[{{mail.get("to").get("email")}}]</span>
           </div>
         </ng-template>
 
@@ -33,15 +33,15 @@
           <button title="" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Print" class="btn btn-default  btn-sm tooltips"><i class="fa fa-print"></i> </button>
           <button title="" data-placement="top" data-toggle="tooltip" data-original-title="Trash" class="btn btn-default btn-sm tooltips"><i class="fa fa-trash-o"></i></button>
         </div>
-        <p class="date pull-right"> {{getDateFormatted(mail.createdAt)}} ({{getCreatedAt(mail.createdAt)}}) </p>
+        <p class="date pull-right"> {{getDateFormatted(mail.get("createdAt"))}} ({{getCreatedAt(mail.get("createdAt"))}}) </p>
 
       </div>
     </div>
   </div>
 
-  <div class="view-mail" [innerHTML]="mail?.message?.text"></div>
+  <div class="view-mail" [innerHTML]="mail?.get('message')?.get('text')"></div>
 
-  <div *ngIf="mail.message.attachment" class="attachment-mail">
+  <div *ngIf="mail.get('message').get('attachment')" class="attachment-mail">
     <h5> Attachments </h5>
     <ul>
       <li>
@@ -76,7 +76,7 @@
     </ul>
   </div>
 
-  <ng-container *ngIf="currentUser.objectId !== mail.from.objectId">
+  <ng-container *ngIf="currentUser.id !== mail.get('from').id">
     <div class="reply-mail m-b-20">
       <form>
         <textarea class="form-control" name="" id="" cols="30" rows="5">Reply</textarea>

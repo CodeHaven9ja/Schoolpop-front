@@ -83,8 +83,8 @@ export class UserService {
   }
 
   getOptions(): RequestOptions {
-    let user:User = <User>JSON.parse(localStorage.getItem("currentUser"));
-    let token = user ? user.sessionToken : '';
+    let user:Parse.User = this.currentUser;
+    let token = user ? user.getSessionToken() : '';
     let headers = new Headers({ 'Content-Type': 'application/json' });
     headers.append('X-Parse-Application-Id', '9o87s1WOIyPgoTEGv0PSp9GXT1En9cwC');
     headers.append('X-Parse-Session-Token', token);

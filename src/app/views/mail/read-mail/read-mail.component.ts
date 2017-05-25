@@ -19,7 +19,7 @@ declare var jQuery: any;
 export class ReadMailComponent implements OnInit {
 
   messageId:string;
-  mail:any = {};
+  mail:Parse.Object = new Parse.Object();
   currentUser:Parse.User;
 
   moment = new MomentUtil();
@@ -31,8 +31,8 @@ export class ReadMailComponent implements OnInit {
   ngOnInit() {
     this.rs.setBc("sticky-header");
     this.mail = this.route.snapshot.data['mail'];
-    if (this.mail.to.objectId == this.currentUser.get("objectId")) {
-      this.ms.markAsRead(this.mail.objectId).subscribe();
+    if (this.mail.get("to").id == this.currentUser.id && !this.mail.get("isRead")) {
+      this.ms.markAsRead(this.mail).subscribe();
     }
   }
 

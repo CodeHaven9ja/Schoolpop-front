@@ -53,15 +53,24 @@ export class MailService {
       .include(['message', 'from'])
       .descending("createdAt");
 
-    let findPromise = new Promise((resolve, reject) => {
+    let ticker = new ObservableUtil().getTicker(0, 1000*10);
+    return ticker.flatMap(() => Observable.fromPromise(new Promise((resolve, reject) =>{
       query.find().then((mails) => {
         resolve(mails);
       }, (err) => {
         reject(err);
       })
-    })
-    let ticker = new ObservableUtil().getTicker(0, 1000*10);
-    return ticker.flatMap(() => Observable.fromPromise(findPromise));
+    })));
+  }
+
+  liveQuery(): Parse.Query {
+    let query = new Parse.Query("Mail");
+    query
+      .equalTo("to", this.us.currentUser)
+      .equalTo("isRead", false)
+      .include(['message', 'from'])
+      .descending("createdAt");
+    return query;
   }
 
   unTicked() {
@@ -81,15 +90,20 @@ export class MailService {
   }
 
   getMail(id:string) {
-    let options = new RequestOptions({
-      headers: this.opts.headers,
-      params: {
-        include: ['message', 'from', 'to']
-      }
+    var Mail = Parse.Object.extend("Mail");
+    var query = new Parse.Query(Mail);
+    query.equalTo("objectId", id);
+    query.include(['message', 'from', 'to']);
+
+    let queryPromise = new Promise((resolve, reject) => {
+      query.first().then((mail) => {
+        resolve(mail);
+      }, (err) => {
+        reject(err);
+      })
     });
 
-    return this.http.get(this.baseUrl+"/classes/Mail/"+id, options)
-    .map((res:Response) => res.json());
+    return Observable.fromPromise(queryPromise);
   }
 
   sendMail(message) {
@@ -138,11 +152,15 @@ export class MailService {
     return Observable.fromPromise(queryPromise);
   }
 
-  markAsRead(id:string) {
-    let options = new RequestOptions({
-      headers: this.opts.headers
-    });
-    return this.http.put(this.baseUrl+"/classes/Mail/"+id, {isRead:true}, options);
-  }
+  markAsRead(mail:Parse.Object) {
+    mail.set("isRead", true);
 
+    return Observable.fromPromise(new Promise((resolve, reject) =>{
+      mail.save().then((mail) =>{
+        resolve(mail);
+      }, (err) => {
+        reject(err);
+      });
+    }));
+  }
 }

@@ -4,7 +4,7 @@ import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { MailService } from './../services/mail.service';
 
 @Injectable()
-export class MailItemResolve implements Resolve<any[]> {
+export class MailItemResolve implements Resolve<Parse.Object[]> {
 
   constructor(private ms: MailService) {}
 
