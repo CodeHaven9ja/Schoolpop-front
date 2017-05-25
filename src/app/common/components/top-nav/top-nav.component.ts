@@ -45,6 +45,15 @@ export class TopNavComponent implements OnInit {
       (count: number) => this.uc = count
     )
 
+    this.ms.getUnreadMails().subscribe(
+      mails => {
+        if (mails.length > 0) {
+          this.ms.setUnreadMails(mails);
+          this.ms.setUnreadCount(mails.length)
+        }
+      }
+    )
+
     this.ms.um.subscribe(
       (mails: Parse.Object[]) => this.mails = mails
     )

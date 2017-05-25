@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { MomentUtil } from '../../../../moment.util';
 
 @Component({
   selector: 'app-single-mail',
@@ -14,6 +15,12 @@ export class SingleMailComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  }
+
+  formatDate(date) {
+    let moment = new MomentUtil();
+
+    return moment.timeDateAgo(date);
   }
 
 }

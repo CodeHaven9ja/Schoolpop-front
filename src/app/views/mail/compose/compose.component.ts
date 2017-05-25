@@ -88,7 +88,7 @@ export class ComposeComponent implements OnInit {
       (res) => {
         this.router.navigate(['/mail']);
       },
-      (err:Response) => console.log(err.json())
+      (err) => this.router.navigate(['/mail'])
     );
 
   }

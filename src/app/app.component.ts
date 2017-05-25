@@ -47,7 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
   sub: Subscription;
   sub2: Subscription;
 
-  unreadCount = 0;
+  unreadCount = this.ms.unreadCnt;
 
   mails: Parse.Object[] = [];
   user: Parse.User;
@@ -78,6 +78,10 @@ export class AppComponent implements OnInit, OnDestroy {
     );
     adjustMainContentHeight();
 
+    this.ms.uc.subscribe(
+      (count: number) => this.unreadCount = count
+    )
+
     this.user = this.us.getCurrentUser();
 
     if (this.user != null) {
@@ -94,7 +98,8 @@ export class AppComponent implements OnInit, OnDestroy {
       .equalTo("to", this.us.currentUser)
       .equalTo("isRead", false)
       .include(['message', 'from'])
-      .descending("createdAt");
+      .descending("createdAt")
+      .include(['message', 'from', 'to']);;
     let subscription = query.subscribe();
 
     subscription.on('open', () => {

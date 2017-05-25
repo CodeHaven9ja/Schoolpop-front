@@ -3,7 +3,7 @@
     {{mail.get("from").get("firstName") | slice:0:1}} {{mail.get("from").get("lastName") | slice:0:1}}
   </span>
   <strong>{{mail.get("from").get("firstName")}} {{mail.get("from").get("lastName")}}</strong>
-  <small> {{mail.get("createdAt")}}</small>
+  <small> {{formatDate(mail.get("createdAt"))}}</small>
   <p>
     <small>{{mail.get("message").get("text")}}</small>
   </p>

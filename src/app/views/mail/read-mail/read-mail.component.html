@@ -78,12 +78,12 @@
 
   <ng-container *ngIf="currentUser.id !== mail.get('from').id">
     <div class="reply-mail m-b-20">
-      <form>
-        <textarea class="form-control" name="" id="" cols="30" rows="5">Reply</textarea>
+      <form #f="ngForm">
+        <textarea class="form-control" name="replyText" id="message" cols="30" rows="5" [(ngModel)]="replyText" #r="ngModel" required>Reply</textarea>
       </form>
     </div>
     <div class="compose-btn pull-right">
-      <a class="btn  btn-success"> Reply Mail</a>
+      <button [disabled]="!f.valid"  (click)="onReply()" class="btn  btn-success"> Reply Mail</button>
     </div>
   </ng-container>
 

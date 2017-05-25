@@ -12,6 +12,7 @@ import { NewsWidgetComponent } from './news-widget/news-widget/news-widget.compo
 import { OwlModule } from './owl-carousel/owl.module';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserListItemComponent } from './user-list-item/user-list-item.component';
+import { ParseService } from '../../services/parse.service';
 
 @NgModule({
   imports: [
@@ -28,6 +29,6 @@ import { UserListItemComponent } from './user-list-item/user-list-item.component
     GravatarComponent,
     NewsWidgetComponent
   ],
-  providers:[UserService]
+  providers:[UserService, ParseService]
 })
 export class WidgetsModule { }

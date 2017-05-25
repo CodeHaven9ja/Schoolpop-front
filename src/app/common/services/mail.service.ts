@@ -1,3 +1,4 @@
+import { ParseService } from './parse.service';
 import { Subject } from 'rxjs/Subject';
 import { ObservableUtil } from '../../ObservableUtil';
 import { Injectable } from '@angular/core';
@@ -12,11 +13,15 @@ import { UserService } from './user.service';
 @Injectable()
 export class MailService {
 
+  public mails:Parse.Object[] = [];
+  public unreadCnt:number = 0;
+
   // Unread Count
   private unreadCount = new Subject<number>();
   uc = this.unreadCount.asObservable();
 
   setUnreadCount(c:number){
+    this.unreadCnt = c;
     this.unreadCount.next(c);
   }
 
@@ -29,7 +34,8 @@ export class MailService {
   um = this.unReadMails.asObservable();
 
   setUnreadMails(m: Parse.Object[]){
-    this.unReadMails.next(m);
+    this.mails = m;
+    this.unReadMails.next(this.mails);
   }
 
   setUnreadMailsError(error:Response) {
@@ -41,7 +47,7 @@ export class MailService {
 
   baseUrl: string = "https://api.schoolpop.ng/1";
 
-  constructor(private us:UserService, private http:Http) { 
+  constructor(private us:UserService, private http:Http, private ps:ParseService) { 
     this.opts = us.getOptions();
   }
 
@@ -52,15 +58,7 @@ export class MailService {
       .equalTo("isRead", false)
       .include(['message', 'from'])
       .descending("createdAt");
-
-    let ticker = new ObservableUtil().getTicker(0, 1000*10);
-    return ticker.flatMap(() => Observable.fromPromise(new Promise((resolve, reject) =>{
-      query.find().then((mails) => {
-        resolve(mails);
-      }, (err) => {
-        reject(err);
-      })
-    })));
+    return Observable.fromPromise(this.ps.getMany(query));
   }
 
   liveQuery(): Parse.Query {
@@ -73,6 +71,7 @@ export class MailService {
     return query;
   }
 
+  // Deprecated
   unTicked() {
     let options = new RequestOptions({
       headers: this.opts.headers,
@@ -95,20 +94,13 @@ export class MailService {
     query.equalTo("objectId", id);
     query.include(['message', 'from', 'to']);
 
-    let queryPromise = new Promise((resolve, reject) => {
-      query.first().then((mail) => {
-        resolve(mail);
-      }, (err) => {
-        reject(err);
-      })
-    });
+    let queryPromise = this.ps.getOne(query);
 
     return Observable.fromPromise(queryPromise);
   }
 
   sendMail(message) {
-    console.log(message);
-    return this.http.post(this.baseUrl+"/functions/loopSend", {message:message}, this.opts).map((res:Response) => res.json());
+    return Observable.fromPromise(this.ps.run("loopSend", { message: message }));
   }
   
   getMails(limit:number  = 10, skip:number = 0) {
@@ -121,13 +113,7 @@ export class MailService {
       .skip(skip)
       .descending("createdAt");
 
-    let queryPromise = new Promise((resolve, reject) => {
-      query.find().then((mails) => {
-        resolve(mails);
-      }, (err) => {
-        reject(err);
-      })
-    });
+    let queryPromise = this.ps.getMany(query);
 
     return Observable.fromPromise(queryPromise);
   }
@@ -141,13 +127,7 @@ export class MailService {
       .skip(skip)
       .descending("createdAt");
 
-    let queryPromise = new Promise((resolve, reject) => {
-      query.find().then((mails) => {
-        resolve(mails);
-      }, (err) => {
-        reject(err);
-      })
-    });
+    let queryPromise = this.ps.getMany(query);
 
     return Observable.fromPromise(queryPromise);
   }
@@ -155,12 +135,6 @@ export class MailService {
   markAsRead(mail:Parse.Object) {
     mail.set("isRead", true);
 
-    return Observable.fromPromise(new Promise((resolve, reject) =>{
-      mail.save().then((mail) =>{
-        resolve(mail);
-      }, (err) => {
-        reject(err);
-      });
-    }));
+    return Observable.fromPromise(this.ps.saveObject(mail));
   }
 }

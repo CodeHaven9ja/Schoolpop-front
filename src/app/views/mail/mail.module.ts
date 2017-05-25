@@ -23,6 +23,7 @@ import { OutboxResolve } from '../../common/resolvers/outbox-resolver';
 import { WidgetsModule } from '../../common/components/widgets/widgets.module';
 import { ComposeComponent } from './compose/compose.component';
 import { MailBoxItemModule } from '../../common/components/widgets/mail-box-item/mail-box-item.component';
+import { ParseService } from '../../common/services/parse.service';
 
 @NgModule({
   imports: [
@@ -36,6 +37,6 @@ import { MailBoxItemModule } from '../../common/components/widgets/mail-box-item
     CKEditorModule
   ],
   declarations: [MailComponent, InboxComponent, OutboxComponent, ReadMailComponent, ComposeComponent],
-  providers:[MailService, UserService, RouteService, InboxResolve, OutboxResolve, MailItemResolve]
+  providers:[MailService, UserService, RouteService, InboxResolve, OutboxResolve, MailItemResolve, ParseService]
 })
 export class MailModule { }
