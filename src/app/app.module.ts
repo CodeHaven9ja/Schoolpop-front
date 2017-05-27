@@ -14,6 +14,8 @@ import { RouteService } from './common/services/route.service';
 import { MdProgressSpinnerModule } from '@angular/material';
 import { CustomOption } from './toastr.options';
 import { ParseService } from './common/services/parse.service';
+import { ClassesService } from './common/services/classes.service';
+import { LoadingService } from './common/services/loading.service';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,12 @@ import { ParseService } from './common/services/parse.service';
     ViewsModule,
     MdProgressSpinnerModule
   ],
-  providers: [RouteService, { provide: ToastOptions, useClass: CustomOption }, ParseService],
+  providers: [
+    RouteService, 
+    { provide: ToastOptions, useClass: CustomOption },
+    LoadingService, 
+    ParseService, 
+    ClassesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -11,6 +11,7 @@ import { Observable } from 'rxjs/Rx';
 import { Topic } from '../../../common/models/topic';
 import { TopicService } from '../../../common/services/topic.service';
 import { Response } from '@angular/http';
+import { ParseService } from '../../../common/services/parse.service';
 
 @Component({
   selector: 'sp-user-view',
@@ -20,12 +21,13 @@ import { Response } from '@angular/http';
 export class UserViewComponent implements OnInit {
   @ViewChild('reportModal') public reportModal: ModalDirective;
 
-  user: User;
+  user: Parse.User;
   currentUser = false;
   isAdminOrTeacher = false;
   isParent = false;
-  parent: User;
+  parent: Parse.User;
   userboxConfig: UserboxConfig;
+  staffboxConfig: UserboxConfig;
   background = '';
 
   subjectForm: FormGroup;
@@ -39,16 +41,59 @@ export class UserViewComponent implements OnInit {
   public typeaheadNoResults: boolean;
   public dataSource: Observable<any>;
 
-  error:any = {};
+  error: any = {};
+
+  results: Parse.Object[] = [];
+  public statesComplex: Topic[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private us: UserService,
     private ps: ProfileService,
-    private ts:TopicService,
+    private parse: ParseService,
+    private ts: TopicService,
     private fb: FormBuilder) {
     this.createForm();
 
+  }
+
+  ngOnInit() {
+    this.init();
+    this.getStaff();
+    if (this.user.get("role") === "user") {
+      this.getResult().subscribe(
+        (r: Parse.Object[]) => this.results = r,
+        (err: Parse.Error) => console.log(err.message)
+      )
+    }
+  }
+
+  init() {
+    this.user = <Parse.User>this.route.snapshot.data['user'];
+    this.statesComplex = <Topic[]>this.route.snapshot.data['topics'];
+
+    if (this.user.has("school")) {
+      this.background = 'url(' + this.user.get("school").get("banner").url() + ') no-repeat';
+    } else {
+      this.background = "url('assets/img/profile-banner.jpg') no-repeat";
+    }
+
+    this.userboxConfig = <UserboxConfig>this.route.snapshot.data['config'];
+
+    this.currentUser = this.user.id === this.us.currentUser.id;
+    this.isAdminOrTeacher = this.us.currentUser.get("role") === 'admin' || this.us.currentUser.get("role") === 'teacher';
+
+    this.isParent = this.user.get("role") === 'parent';
+
+    if (this.isParent) {
+
+    }
+
+    this.dataSource = Observable
+      .create((observer: any) => {
+        // Runs on every search
+        observer.next(this.asyncSelected);
+      }).mergeMap((token: string) => this.getStatesAsObservable(token));
   }
 
   getStatesAsObservable(token) {
@@ -67,31 +112,22 @@ export class UserViewComponent implements OnInit {
       examScore: [0, Validators.required]
     });
   }
+  
 
-  public statesComplex: Topic[] = [];
+  getStaff() {
+    let staffQuery = new Parse.Query("_User");
+    staffQuery
+      .equalTo("school", this.us.currentUser.get("school"))
+      .equalTo("role", "teacher");
 
-  ngOnInit() {
-    this.user = <User>this.route.snapshot.data['user'];
-    this.statesComplex = <Topic[]>this.route.snapshot.data['topics'];
+    this.staffboxConfig = new UserboxConfig();
+    this.staffboxConfig.title = "Staff";
+    this.staffboxConfig.imgWidth = 52;
+    this.staffboxConfig.users = Observable.fromPromise(this.parse.getMany(staffQuery));
+  }
 
-    this.background = 'url(' + this.user.school.banner.url + ') no-repeat';
-
-    this.userboxConfig = <UserboxConfig>this.route.snapshot.data['config'];
-
-    this.currentUser = this.user.objectId === this.us.currentUser.get("objectId");
-    this.isAdminOrTeacher = this.us.currentUser.get("role") === 'admin' || this.us.currentUser.get("role") === 'teacher';
-
-    this.isParent = this.user.role === 'parent';
-
-    if (this.isParent) {
-
-    }
-
-    this.dataSource = Observable
-      .create((observer: any) => {
-        // Runs on every search
-        observer.next(this.asyncSelected);
-      }).mergeMap((token: string) => this.getStatesAsObservable(token));
+  getResult() {
+    return Observable.fromPromise(this.parse.run('getResult', { sid: this.user.id }));
   }
 
   public showModal(): void {
@@ -111,22 +147,22 @@ export class UserViewComponent implements OnInit {
       return state.title === this.subjectForm.value.topic;
     });
 
-    let data:any = {};
+    let data: any = {};
     // console.log(topic);
-    data.studentId = this.user.objectId;
+    data.studentId = this.user.id;
     data.caScore = this.subjectForm.value.caScore;
     data.examScore = this.subjectForm.value.examScore;
     data.score = this.subjectForm.value.caScore + this.subjectForm.value.examScore;
     data.topicId = topic[0].objectId;
 
-    this.isLoading = true; 
+    this.isLoading = true;
 
     this.ts.addReport(data).subscribe(
       r => {
         this.isLoading = false;
         this.hideModal();
       },
-      (error:Response) => {
+      (error: Response) => {
         this.isLoading = false;
         this.error = error.json();
       }

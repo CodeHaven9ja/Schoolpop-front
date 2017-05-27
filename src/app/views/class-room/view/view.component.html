@@ -6,9 +6,27 @@
   <div class="panel-body">
     <tabset [justified]="true">
       <tab heading="List">
-        <sp-user-list [usersIdList]="class.students"></sp-user-list>
+        <sp-user-list [usersIdList]="students"></sp-user-list>
       </tab>
-      <tab heading="Add Student"></tab>
+      <tab heading="Add Student">
+        <div class="panel">
+          <div class="panel-body">
+            <form [formGroup]="newStudentForm" (ngSubmit)="onSubmit()" novalidate>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="identifier" placeholder="Enter Username or email or user id">
+              </div>
+              <button 
+                [disabled]="!newStudentForm.valid || isLoading" 
+                class="btn btn-lg btn-success btn-block" 
+                type="submit">
+                
+                Add Student
+              
+              </button>
+            </form>
+          </div>
+        </div>
+      </tab>
     </tabset>
   </div>
 </div>

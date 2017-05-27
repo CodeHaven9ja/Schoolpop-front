@@ -16,10 +16,13 @@
       </thead>
       <tbody>
         <tr *ngFor="let c of classes">
-          <td>{{c.commonName}}</td>
-          <td>{{c.students?.length}}</td>
+          <td>{{c.get("commonName")}}</td>
+          <td>{{c.get("students")?.length}}</td>
           <td>
-            <a [routerLink]="['/class',c.objectId]">View</a>
+            <a [routerLink]="['/class',c.id]">View</a>
+          </td>
+          <td>
+            <button (click)="remove(c)" class="btn btn-sm btn-danger">Remove Class</button>
           </td>
         </tr>
       </tbody>

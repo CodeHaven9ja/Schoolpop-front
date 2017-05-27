@@ -17,9 +17,9 @@
             <tbody>
               <tr *ngFor="let user of children; let i = index">
                 <td>{{i + 1}}</td>
-                <td class="text-capitalize">{{user.firstName}} {{user.lastName}}</td>
+                <td class="text-capitalize">{{user.get("firstName")}} {{user.get("lastName")}}</td>
                 <td>
-                  <a [routerLink]="['/user', user.objectId]" class="btn btn-sm btn-success">View</a>
+                  <a [routerLink]="['/user', user.id]" class="btn btn-sm btn-success">View</a>
                 </td>
               </tr>
             </tbody>

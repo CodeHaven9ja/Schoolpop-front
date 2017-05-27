@@ -5,6 +5,7 @@ import { ClassesService } from '../../common/services/classes.service';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ToastsManager } from 'ng2-toastr';
 import { validateClassRoomName } from '../../common/validators/class-room-students.validator';
+import { UserService } from '../../common/services/user.service';
 
 @Component({
   selector: 'sp-class-room',
@@ -14,15 +15,18 @@ import { validateClassRoomName } from '../../common/validators/class-room-studen
 export class ClassRoomComponent implements OnInit {
 
   newClassForm: FormGroup;
-  classesObsv: Observable<any[]> = this.cs.getClasses();
-  classes: any[] = [];
+  classesObsv: Observable<Parse.Object[]> = this.cs.getClasses();
+  classes: Parse.Object[] = [];
   isLoading: boolean = false;
+
+  sub:any;
 
   commonName = new FormControl("", Validators.compose([Validators.required,
   this.uniqueClassName.bind(this)]));
 
   constructor(private rs: RouteService,
     private cs: ClassesService,
+    private us:UserService,
     private fb: FormBuilder,
     private toastr: ToastsManager,
     vRef: ViewContainerRef) {
@@ -53,12 +57,17 @@ export class ClassRoomComponent implements OnInit {
     this.isLoading = true;
     let c = this.newClassForm.value;
     c.students = [];
-    this.cs.addClass(c).flatMap(() => this.cs.getClasses()).subscribe(
-      (c) => {
+
+    let ClassRoom = Parse.Object.extend("ClassRoom");
+    let clazz:Parse.Object = new ClassRoom();
+    clazz.set("commonName", className);
+    clazz.set("students", []);
+
+    this.cs.addClass(clazz).flatMap(() => this.cs.getClasses()).subscribe(
+      (c: Parse.Object[]) => {
         this.classes = c;
         this.newClassForm.reset();
         this.isLoading = false;
-        console.log(c);
         this.cs.setClasses(c);
       }
     );
@@ -68,12 +77,10 @@ export class ClassRoomComponent implements OnInit {
     let name: string = control.value;
     let isInvalid = false;
 
-    // console.log(this.classes);
-
     for (let i = 0; i < this.classes.length; i++) {
-      if (this.classes[i].commonName && name && name.toLowerCase() === this.classes[i].commonName.toLowerCase()) {
+      let c:any = this.classes[i];
+      if (c.commonName && name && name.toLowerCase() === c.commonName.toLowerCase()) {
         isInvalid = true;
-        // console.log("Is Invalid", isInvalid);
       }
       break;
     }

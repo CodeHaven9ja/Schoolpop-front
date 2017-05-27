@@ -1,23 +1,61 @@
 <div [ngStyle]="{'background': background}" class="profile-hero">
   <div class="profile-intro">
     <app-gravatar [user]="user" [width]="70"></app-gravatar>
-    <h1>{{user.firstName}} {{user.lastName}}</h1>
-    <span>{{user.school.commonName}}</span>
+    <h1>{{user.get("firstName")}} {{user.get("lastName")}}</h1>
+    <span *ngIf="user.has('school')">{{user.get("school").get("commonName")}}</span>
   </div>
   <div class="profile-follow">
-    <a *ngIf="isAdminOrTeacher && user.role == 'user'" class="btn btn-success" (click)="showModal()"> <i class="fa fa-plus"></i> Add Report</a>
+    <a *ngIf="isAdminOrTeacher && user.get('role') == 'user'" class="btn btn-success" (click)="showModal()"> <i class="fa fa-plus"></i> Add Report</a>
     <!--<a href="#" class="btn btn-default"> <i class="fa fa-check"></i> Follow me</a>-->
-    <a href="#" class="btn btn-default"> <i class="fa fa-comment"></i> Message</a>
+    <a *ngIf="!currentUser" href="#" class="btn btn-default"> <i class="fa fa-comment"></i> Message</a>
   </div>
 </div>
 
 <div class="wrapper no-pad">
   <div class="profile-desk">
     <aside class="p-aside">
-
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel">
+            <header class="panel-heading">
+              Results
+            </header>
+            <div class="panel-body">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Subject</th>
+                    <th>CA Test</th>
+                    <th>Exam</th>
+                    <th>Grade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let result of results; let i = index;">
+                    <td>{{i}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </aside>
     <aside class="p-short-info">
-      <sp-userbox *ngIf="user.role == 'parent' || user.role == 'user'" [config]="userboxConfig"></sp-userbox>
+      <sp-userbox *ngIf="user.get('role') == 'parent' || user.get('role') == 'user'" [config]="userboxConfig"></sp-userbox>
+      <sp-userbox *ngIf="user.get('role') == 'parent' || user.get('role') == 'user'" [config]="staffboxConfig"></sp-userbox>
+      <div class="widget">
+        <div class="title">
+          <h1>About</h1>
+        </div>
+        <div class="bio-row">
+          <p><span>Gender </span> {{user.get("sex")}} </p>
+        </div>
+      </div>
     </aside>
   </div>
 </div>
@@ -41,14 +79,8 @@
                 <div class="row">
                   <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">Subject</label>
                   <div class="col-lg-10">
-                    <input formControlName="topic" 
-                      [(ngModel)]="asyncSelected"
-                      [typeahead]="dataSource" 
-                      typeaheadOptionsLimit="7" 
-                      typeaheadMinLength="0" 
-                      typeaheadOptionField="title"
-                      placeholder="Choose a subject"
-                      class="form-control">
+                    <input formControlName="topic" [(ngModel)]="asyncSelected" [typeahead]="dataSource" typeaheadOptionsLimit="7" typeaheadMinLength="0"
+                      typeaheadOptionField="title" placeholder="Choose a subject" class="form-control">
                   </div>
                 </div>
               </div>
@@ -75,7 +107,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" [disabled]="isLoading" (click)="hideModal()">Close</button>
-<button type="button" data-dismiss="modal" class="btn btn-info" (click)="onSubmit()" [disabled]="!subjectForm.valid || isLoading">Submit</button>
+        <button type="button" data-dismiss="modal" class="btn btn-info" (click)="onSubmit()" [disabled]="!subjectForm.valid || isLoading">Submit</button>
       </div>
     </div>
   </div>

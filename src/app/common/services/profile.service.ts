@@ -6,49 +6,26 @@ import 'rxjs/add/operator/map';
 
 import { User } from '../models/user';
 import { UserService } from './user.service';
+import { ParseService } from './parse.service';
 
 @Injectable()
 export class ProfileService {
   baseUrl: string = "https://api.schoolpop.ng/1";
 
-  constructor(private http: Http, private us:UserService) { }
+  constructor(private http: Http, private us:UserService, private ps:ParseService) { }
 
   getParent(user: Parse.User) {
-    let options = new RequestOptions({
-      headers: this.us.getOptions().headers,
-      params: {
-        where: {
-          user: this.us.getUserPointer(user)
-        },
-        include: ['parent'],
-        order: "-createdAt",
-        limit: 2
-      }
-    });
+    let query = new Parse.Query("Profile");
+    query
+      .equalTo("user", user)
+      .include(['parent'])
+      .descending("createdAt")
+      .limit(2);
 
-    return this.http.get(this.baseUrl + "/classes/Profile", options)
-      .flatMap((res: Response) => {
-        let users: User[] = [];
-        let u: any[] = res.json().results;
-        for (let i = 0; i < u.length; i++) {
-          let user = u[i].parent;
-          users.push(user);
-        }
-        return users;
-      }).toArray();
+    return this.getProfileUserObservable("parent", query);
   }
 
   getChildren(user:Parse.User):Observable<Parse.User[]> {
-    let options = new RequestOptions({
-      headers: this.us.getOptions().headers,
-      params: {
-        where: {
-          parent: this.us.getUserPointer(user)
-        },
-        include: ['user'],
-        order: "-createdAt"
-      }
-    });
 
     var Profile = Parse.Object.extend("Profile");
     var query = new Parse.Query(Profile);
@@ -56,36 +33,20 @@ export class ProfileService {
     query.include(['user']);
     query.descending("createdAt");
 
-    let findPromise = new Promise((resolve, reject) => {
-      query.find().then((users) => {
-        resolve(users);
-      }, (err) => {
-        reject(err);
-      });
-    });
+    return this.getProfileUserObservable("user", query);
+  }
 
-    return Observable.fromPromise(findPromise).flatMap((profiles: Parse.Object[]) => {
-      let p:Parse.Object[] = profiles;
-      let us:Parse.User[] = [];
+  getProfileUserObservable(key:string, query:Parse.Query) {
+    return Observable.fromPromise(this.ps.getMany(query)).flatMap((profiles: Parse.Object[]) => {
+      let p: Parse.Object[] = profiles;
+      let us: Parse.User[] = [];
 
-      for(let i = 0; i< p.length; i++) {
-        let u:Parse.User = p[i].get("user");
+      for (let i = 0; i < p.length; i++) {
+        let u: Parse.User = p[i].get(key);
         us.push(u);
       }
       return us;
     }).toArray();
-
-
-    // return this.http.get(this.baseUrl+"/classes/Profile", options)
-    // .flatMap((res:Response) => {
-    //   let users:User[] = [];
-    //   let u:any[] = res.json().results;
-    //   for(let i = 0; i < u.length; i++) {
-    //     let user = u[i].user;
-    //     users.push(user);
-    //   }
-    //   return users;
-    // }).toArray();
   }
 
 }

@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { User } from '../../../models/user';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -14,6 +13,7 @@ export class UserboxComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log(this.config.users);
   }
 
 }

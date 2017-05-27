@@ -1,3 +1,4 @@
+import { LoadingService } from '../../common/services/loading.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
@@ -14,6 +15,8 @@ import { ToastModule } from 'ng2-toastr';
 import { ClassroomResolve } from '../../common/resolvers/classroom.resolver';
 import { TabsModule } from 'ngx-bootstrap';
 import { UserListModule } from '../../common/components/widgets/user-list/user-list.component';
+import { UserService } from '../../common/services/user.service';
+import { ParseService } from '../../common/services/parse.service';
 
 @NgModule({
   imports: [
@@ -30,7 +33,10 @@ import { UserListModule } from '../../common/components/widgets/user-list/user-l
   providers: [
     RouteService,
     ClassroomResolve,
-    ClassesService
+    ClassesService,
+    UserService,
+    LoadingService,
+    ParseService
   ]
 })
 export class ClassRoomModule { }

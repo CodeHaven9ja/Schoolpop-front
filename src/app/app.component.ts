@@ -28,6 +28,8 @@ import { MailService } from './common/services/mail.service';
 import { MomentUtil } from './moment.util';
 import { User } from './common/models/user';
 import { UserService } from './common/services/user.service';
+import { ClassesService } from './common/services/classes.service';
+import { LoadingService } from './common/services/loading.service';
 
 declare var jQuery: any;
 declare var Parse: any;
@@ -60,12 +62,18 @@ export class AppComponent implements OnInit, OnDestroy {
     private renderer: Renderer,
     private us: UserService,
     private toastr: ToastsManager,
+    private cs: ClassesService,
+    private ls: LoadingService,
     vRef: ViewContainerRef,
     private ms: MailService) {
 
     this.toastr.setRootViewContainerRef(vRef);
     this.sub = router.events.subscribe((event: RouterEvent) => {
       this._navigationInterceptor(event);
+    });
+
+    this.sub2 = this.ls.getLoading.subscribe((isLoading:boolean) => {
+      this._navigationInterceptor(null, isLoading);
     });
   }
   ngOnInit() {
@@ -92,6 +100,46 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private poll() {
+    this.mailPoll();
+    this.schoolPoll();
+  }
+
+  private schoolPoll() {
+    let query = new Parse.Query("School");
+    query.equalTo("objectId", this.us.currentUser.get("school").id);
+
+    let subscription = query.subscribe();
+
+    subscription.on('open', () => {
+      console.log('School subscription opened');
+    });
+
+    subscription.on('update', (object) =>{
+      this.cs.setSchoolUpdated();
+    })
+
+    subscription.on('enter', (object) => {
+      console.log('object entered', object);
+      // this.unreadCount++;
+      // this.addToMailList(object);
+      // this.toastr.success('You have new messages');
+      // this.ms.setUnreadCount(this.unreadCount);
+      // this.ms.setUnreadMails(this.mails);
+    });
+
+    subscription.on('leave', (object) => {
+      console.log('object left', object);
+      // if (this.unreadCount > 0) {
+      //   this.unreadCount--;
+      // }
+      // this.removeFromMailList(object);
+      // this.ms.setUnreadCount(this.unreadCount);
+      // this.ms.setUnreadMails(this.mails);
+    });
+
+  }
+
+  private mailPoll() {
     // Switch to live query
     let query = new Parse.Query("Mail");
     query
@@ -100,13 +148,13 @@ export class AppComponent implements OnInit, OnDestroy {
       .include(['message', 'from'])
       .descending("createdAt")
       .include(['message', 'from', 'to']);;
-    let subscription = query.subscribe();
+    let subscription1 = query.subscribe();
 
-    subscription.on('open', () => {
-      console.log('subscription opened');
+    subscription1.on('open', () => {
+      console.log('Mail subscription opened');
     });
 
-    subscription.on('create', (object) => {
+    subscription1.on('create', (object) => {
       console.log('object created');
       this.unreadCount++;
       this.addToMailList(object);
@@ -115,7 +163,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.ms.setUnreadMails(this.mails);
     });
 
-    subscription.on('enter', (object) => {
+    subscription1.on('enter', (object) => {
       console.log('object entered', object);
       this.unreadCount++;
       this.addToMailList(object);
@@ -123,8 +171,8 @@ export class AppComponent implements OnInit, OnDestroy {
       this.ms.setUnreadCount(this.unreadCount);
       this.ms.setUnreadMails(this.mails);
     });
-    
-    subscription.on('leave', (object) => {
+
+    subscription1.on('leave', (object) => {
       console.log('object left', object);
       if (this.unreadCount > 0) {
         this.unreadCount--;
@@ -145,8 +193,8 @@ export class AppComponent implements OnInit, OnDestroy {
     })
   }
 
-  private _navigationInterceptor(event: RouterEvent): void {
-    if (event instanceof NavigationStart) {
+  private _navigationInterceptor(event?: RouterEvent, shouldLoad?:boolean): void {
+    if (event instanceof NavigationStart || shouldLoad) {
       // We wanna run this function outside of Angular's zone to
       // bypass change detection
       this.ngZone.runOutsideAngular(() => {
@@ -155,7 +203,7 @@ export class AppComponent implements OnInit, OnDestroy {
       });
     }
 
-    if (event instanceof NavigationEnd) {
+    if (event instanceof NavigationEnd || !shouldLoad) {
       this._hideSpinner();
     }
 

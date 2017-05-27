@@ -130,4 +130,22 @@ export class UserService {
     });
   }
 
+  getUserByIdentifier(identifier:string): Observable<Parse.User> {
+    let User = Parse.Object.extend("_User");
+
+    let queryEmail = new Parse.Query(User);
+    queryEmail.equalTo("email", identifier);
+
+    let queryUsername = new Parse.Query(User);
+    queryUsername.equalTo("username", identifier);
+
+    let queryObjectId = new Parse.Query(User);
+    queryObjectId.equalTo("objectId", identifier);
+
+    let mainQuery = Parse.Query.or(queryEmail, queryUsername, queryObjectId);
+
+    return Observable.fromPromise(this.ps.getOne(mainQuery));
+
+  }
+
 }
