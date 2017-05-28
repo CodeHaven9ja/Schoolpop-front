@@ -15,7 +15,7 @@
   <div class="profile-desk">
     <aside class="p-aside">
       <div class="row">
-        <div class="col-md-12">
+        <div *ngIf="user.get('role') == 'user'" class="col-md-12">
           <div class="panel">
             <header class="panel-heading">
               Results
@@ -31,13 +31,33 @@
                     <th>Grade</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr *ngFor="let result of results; let i = index;">
-                    <td>{{i}}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
+                <tbody [formGroup]="editScoreGroup">
+                  <ng-container *ngFor="let result of results; let i = index;">
+                    <tr>
+                      <td>{{i + 1}}</td>
+                      <td>{{result.get("subject").get("title")}}</td>
+                      <ng-container *ngIf="i != editPosition; else e">
+                        <td>{{result.get("caScore")}}</td>
+                        <td>{{result.get("examScore")}}</td>
+                      </ng-container>
+                      <ng-template #e>
+                        <td><input type="number" name="caScore" formControlName="caScore"></td>
+                        <td><input type="number" name="examScore"  formControlName="examScore"></td>
+                      </ng-template>
+                      <td>
+                        {{getGrade(result.get("caScore") + result.get("examScore"), result.has("examScore"))}}
+                      </td>
+                      <ng-container *ngIf="isAdminOrTeacher">
+                        <td>
+                          <a (click)="editScore(i)" class="btn btn-sm">edit</a>
+                        </td>
+                        <td *ngIf="i == editPosition">
+                          <button [disabled]="isUpdating" (click)="finishEdit(i)" class="btn btn-success btn-xs">done</button>
+                          <button *ngIf="!isUpdating" (click)="cancelEdit(i)" class="btn btn-danger btn-xs">cancel</button>
+                        </td>
+                      </ng-container>
+                    </tr>
+                  </ng-container>
                 </tbody>
               </table>
             </div>

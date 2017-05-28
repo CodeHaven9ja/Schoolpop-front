@@ -19,9 +19,20 @@ import { ClassRoomIndexComponent } from './views/class-room/index/index.componen
 import { ClassRoomViewComponent } from './views/class-room/view/view.component';
 import { ClassroomResolve } from './common/resolvers/classroom.resolver';
 import { UsersRoute } from './views/users/users-route';
-export const ROUTES:Routes = [
+import { FourOhFourComponent } from './views/error/four-oh-four/four-oh-four.component';
+import { FourOhOneComponent } from './views/error/four-oh-one/four-oh-one.component';
+import { AdminOrTeacherGuard } from './common/guards/admin-or-teacher.guard';
+export const ROUTES: Routes = [
   {
-    "path" : '',
+    path: '404',
+    component: FourOhFourComponent
+  },
+  {
+    path: '500',
+    component: FourOhOneComponent
+  },
+  {
+    "path": '',
     component: LandingComponent,
     pathMatch: 'full',
     canActivate: [
@@ -49,19 +60,20 @@ export const ROUTES:Routes = [
         component: DashboardComponent
       },
       {
-        path : 'class',
+        path: 'class',
         redirectTo: 'class/index'
       },
       {
-        path : 'class',
+        path: 'class',
         component: ClassRoomComponent,
+        canActivate: [AdminOrTeacherGuard],
         children: [
           {
-            path : 'index',
-            component : ClassRoomIndexComponent
+            path: 'index',
+            component: ClassRoomIndexComponent
           },
           {
-            path : ':id',
+            path: ':id',
             component: ClassRoomViewComponent,
             resolve: {
               classroom: ClassroomResolve
@@ -105,5 +117,6 @@ export const ROUTES:Routes = [
         ]
       }
     ]
-  }
+  },
+  { path: '**', redirectTo: '/404' }
 ]

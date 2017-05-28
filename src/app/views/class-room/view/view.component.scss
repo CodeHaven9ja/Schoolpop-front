@@ -5,3 +5,17 @@
 tab {
   margin: 10px 10px 0 10px;
 }
+
+.list {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+  sp-user-list-item > p {
+    display: block;
+    padding: 8px;
+    line-height: 1.42857143;
+    border-top: 1px solid #ddd;
+  }
+}

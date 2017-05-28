@@ -17,6 +17,7 @@ import { TabsModule } from 'ngx-bootstrap';
 import { UserListModule } from '../../common/components/widgets/user-list/user-list.component';
 import { UserService } from '../../common/services/user.service';
 import { ParseService } from '../../common/services/parse.service';
+import { AdminOrTeacherGuard } from '../../common/guards/admin-or-teacher.guard';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { ParseService } from '../../common/services/parse.service';
     ClassesService,
     UserService,
     LoadingService,
-    ParseService
+    ParseService,
+    AdminOrTeacherGuard
   ]
 })
 export class ClassRoomModule { }

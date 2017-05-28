@@ -10,18 +10,20 @@ import { LandingModule } from './landing/landing.module';
 import { MailModule } from './mail/mail.module';
 import { WidgetsModule } from '../common/components/widgets/widgets.module';
 import { UsersModule } from './users/users.module';
+import { ErrorModule } from './error/error.module';
 
 @NgModule({
   imports: [
-    CommonModule,
-    LayoutsModule,
     AuthModule,
-    DashboardModule,
-    LandingModule,
-    MailModule,
-    WidgetsModule,
     ClassRoomModule,
-    UsersModule
+    CommonModule,
+    ErrorModule,
+    LandingModule,
+    DashboardModule,
+    LayoutsModule,
+    MailModule,
+    UsersModule,
+    WidgetsModule
   ],
   declarations: []
 })

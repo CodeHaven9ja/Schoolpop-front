@@ -6,7 +6,7 @@ import { UserService } from '../../../common/services/user.service';
 import { UserboxConfig } from '../../../common/components/widgets/userbox/userbox.component';
 import { ProfileService } from '../../../common/services/profile.service';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import { Topic } from '../../../common/models/topic';
 import { TopicService } from '../../../common/services/topic.service';
@@ -30,10 +30,13 @@ export class UserViewComponent implements OnInit {
   staffboxConfig: UserboxConfig;
   background = '';
 
+  editPosition:number;
+
   subjectForm: FormGroup;
 
   public isModalShown = false;
   public isLoading = false;
+  public isUpdating = false;
 
   asyncSelected: string;
 
@@ -46,6 +49,8 @@ export class UserViewComponent implements OnInit {
   results: Parse.Object[] = [];
   public statesComplex: Topic[] = [];
 
+  editScoreGroup: FormGroup;
+
   constructor(
     private route: ActivatedRoute,
     private us: UserService,
@@ -57,12 +62,43 @@ export class UserViewComponent implements OnInit {
 
   }
 
+  editScore(i:number) {
+    this.editPosition = i;
+    this.editScoreGroup.patchValue({
+      caScore: this.results[i].get("caScore"),
+      examScore: this.results[i].get("examScore")
+    })
+  }
+
+  finishEdit(i:number) {
+    this.isUpdating = true;
+    if (this.editScoreGroup.value.caScore != this.results[i].get("caScore")) {
+      this.results[i].set("caScore", this.editScoreGroup.value.caScore)
+    }
+    if (this.editScoreGroup.value.examScore != this.results[i].get("examScore")) {
+      this.results[i].set("examScore", this.editScoreGroup.value.examScore)
+    }
+
+    Observable.fromPromise(this.parse.saveObject(this.results[i])).subscribe(
+      (r) => {
+        this.editPosition = null;
+        this.isUpdating = false;
+      }
+    )
+  }
+
+  cancelEdit(i) {
+    this.editPosition = null;
+  }
+
   ngOnInit() {
     this.init();
     this.getStaff();
     if (this.user.get("role") === "user") {
       this.getResult().subscribe(
-        (r: Parse.Object[]) => this.results = r,
+        (r: Parse.Object[]) => {
+          this.results = r;
+        },
         (err: Parse.Error) => console.log(err.message)
       )
     }
@@ -111,6 +147,10 @@ export class UserViewComponent implements OnInit {
       caScore: [0, Validators.required],
       examScore: [0, Validators.required]
     });
+    this.editScoreGroup = this.fb.group({
+      caScore: [0, Validators.required],
+      examScore: [0, Validators.required]
+    })
   }
   
 
@@ -126,8 +166,34 @@ export class UserViewComponent implements OnInit {
     this.staffboxConfig.users = Observable.fromPromise(this.parse.getMany(staffQuery));
   }
 
-  getResult() {
-    return Observable.fromPromise(this.parse.run('getResult', { sid: this.user.id }));
+  getResult(): Observable<Parse.Object[]> {
+    let query = new Parse.Query("Report");
+    query.equalTo("student", this.user);
+    query.descending("createdAt");
+    return Observable.fromPromise(this.parse.getOne(query))
+      .flatMap((report:Parse.Object) =>{
+        let q2 = report.relation("subjects").query();
+        q2.include(["subject"]);
+        return Observable.fromPromise(this.parse.getMany(q2));
+      });
+  }
+
+  getGrade(score:number, hasExam:boolean) {
+    if (!hasExam) {
+      return "";
+    } else if (score <= 39) {
+      return "F";
+    } else if (score > 39 && score <= 44) {
+      return "E";
+    } else if (score > 44 && score <= 49) {
+      return "D";
+    } else if (score > 49 && score <= 64) { 
+      return "C";
+    } else if (score > 64 && score <= 74) {
+      return "B";
+    } else {
+      return "A";
+    }
   }
 
   public showModal(): void {
@@ -157,8 +223,9 @@ export class UserViewComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.ts.addReport(data).subscribe(
+    this.ts.addReport(data).flatMap(() => this.getResult()).subscribe(
       r => {
+        this.results = r;
         this.isLoading = false;
         this.hideModal();
       },

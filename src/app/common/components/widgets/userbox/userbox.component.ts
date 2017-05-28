@@ -13,7 +13,7 @@ export class UserboxComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.config.users);
+    // console.log(this.config.users);
   }
 
 }

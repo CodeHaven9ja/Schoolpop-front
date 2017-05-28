@@ -16,6 +16,7 @@ import { CustomOption } from './toastr.options';
 import { ParseService } from './common/services/parse.service';
 import { ClassesService } from './common/services/classes.service';
 import { LoadingService } from './common/services/loading.service';
+import { GraderDirective } from './common/directives/grader.directive';
 
 @NgModule({
   declarations: [

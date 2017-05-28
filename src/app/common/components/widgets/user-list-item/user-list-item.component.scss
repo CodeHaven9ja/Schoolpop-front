@@ -1,13 +1,14 @@
 tr {
   display: block;
 }
+
 tr:nth-of-type(odd) {
   background-color: #f9f9f9;
 }
 
-td {
+p {
+  display: block;
   padding: 8px;
   line-height: 1.42857143;
-  vertical-align: top;
   border-top: 1px solid #ddd;
 }

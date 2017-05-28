@@ -20,6 +20,7 @@ import { UsersIndexComponent } from './users-index/users-index.component';
 import { UserboxConfigResolve, UserResolve } from '../../common/resolvers/user-resolver';
 import { TopicResolve } from '../../common/resolvers/topic.resolver';
 import { TopicService } from '../../common/services/topic.service';
+import { GraderModule } from '../../common/directives/grader.directive';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { TopicService } from '../../common/services/topic.service';
     RouterModule,
     WidgetsModule,
     UserboxModule,
+    GraderModule,
     ModalModule.forRoot(),
     TypeaheadModule.forRoot()
   ],
