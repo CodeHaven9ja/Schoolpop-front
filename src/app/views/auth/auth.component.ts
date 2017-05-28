@@ -53,10 +53,9 @@ export class AuthComponent implements OnInit {
         // this.us.setCurrentUser(user);
         location.href = "/dashboard";
       },
-      (err: Response) => {
-        let e = err.json();
+      (err: Parse.Error) => {
         // console.log(e.error);
-        this.toastr.error(e.error, 'Oops!');
+        this.toastr.error(err.message, 'Oops!');
         this.isLoading = false;
       },
       () => console.log("Complete")

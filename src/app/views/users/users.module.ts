@@ -1,3 +1,4 @@
+import { LoadingService } from '../../common/services/loading.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -21,6 +22,7 @@ import { UserboxConfigResolve, UserResolve } from '../../common/resolvers/user-r
 import { TopicResolve } from '../../common/resolvers/topic.resolver';
 import { TopicService } from '../../common/services/topic.service';
 import { GraderModule } from '../../common/directives/grader.directive';
+import { ToastModule } from 'ng2-toastr';
 
 
 @NgModule({
@@ -32,6 +34,7 @@ import { GraderModule } from '../../common/directives/grader.directive';
     WidgetsModule,
     UserboxModule,
     GraderModule,
+    ToastModule.forRoot(),
     ModalModule.forRoot(),
     TypeaheadModule.forRoot()
   ],
@@ -47,7 +50,8 @@ import { GraderModule } from '../../common/directives/grader.directive';
     UserResolve,
     UserboxConfigResolve,
     TopicResolve,
-    TopicService
+    TopicService,
+    LoadingService
   ]
 })
 export class UsersModule { }

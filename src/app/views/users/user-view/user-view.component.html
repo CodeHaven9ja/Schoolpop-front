@@ -5,7 +5,12 @@
     <span *ngIf="user.has('school')">{{user.get("school").get("commonName")}}</span>
   </div>
   <div class="profile-follow">
-    <a *ngIf="isAdminOrTeacher && user.get('role') == 'user'" class="btn btn-success" (click)="showModal()"> <i class="fa fa-plus"></i> Add Report</a>
+    <ng-container *ngIf="error.report?.code != 404; else create">
+      <a *ngIf="isAdminOrTeacher && user.get('role') == 'user' " class="btn btn-success" (click)="showModal()"> <i class="fa fa-plus"></i> Add Report</a>
+    </ng-container>
+    <ng-template #create>
+      <a *ngIf="isAdminOrTeacher && user.get('role') == 'user' " class="btn btn-info" (click)="createReport()"> <i class="fa fa-plus"></i> Create Report</a>
+    </ng-template>
     <!--<a href="#" class="btn btn-default"> <i class="fa fa-check"></i> Follow me</a>-->
     <a *ngIf="!currentUser" href="#" class="btn btn-default"> <i class="fa fa-comment"></i> Message</a>
   </div>
